@@ -3,11 +3,11 @@ name: CI for Next.js & Django
 on:
   push:
     branches: [main, dev]
-  pull_request:
+    paths:
+      - 'frontend/**'
 
 jobs:
   frontend-tests:
-    if: contains(github.event.head_commit.modified, 'frontend/') # Run only if frontend files change
     runs-on: ubuntu-latest
     defaults:
       run:
