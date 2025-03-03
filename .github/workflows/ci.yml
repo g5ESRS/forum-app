@@ -1,13 +1,13 @@
-name: CI for Next.js & Django
+name: CI for Next.js
 
 on:
   push:
     branches: [main, dev]
-  pull_request:
+    paths:
+      - 'frontend/**'
 
 jobs:
   frontend-tests:
-    if: contains(github.event.head_commit.modified, 'frontend/') # Run only if frontend files change
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -32,7 +32,6 @@ jobs:
         run: npm test
 
 #  backend-tests:
-#    if: contains(github.event.head_commit.modified, 'backend/') # Run only if backend files change
 #    runs-on: ubuntu-latest
 #    defaults:
 #      run:
