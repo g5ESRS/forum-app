@@ -25,6 +25,9 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
+      - name: Run ESLint
+        run: npm run lint
+
       - name: Run Next.js frontend tests
         run: npm test
 
