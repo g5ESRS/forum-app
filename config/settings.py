@@ -16,11 +16,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 
 from pathlib import Path
-# Load environment variables from .env file
-load_dotenv()
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path=BASE_DIR / ".env.dev")
 
 # Secret key
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_key")
