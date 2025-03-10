@@ -1,0 +1,72 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environment
+venv/
+#.env
+.env.local
+#*.env
+
+# Django secret files
+config/settings.pyc
+config/settings_local.py  # If you have a local settings file
+
+# Logs
+logs/
+*.log
+debug.log
+
+# Database files
+*.sqlite3
+db.sqlite3
+
+# Static and Media files (unless you want to track them)
+static/
+media/
+
+# Ignore collected static files
+/static/
+/media/
+
+# Ignore migrations cache
+*/migrations/*.pyc
+*/migrations/__pycache__/
+
+# Docker-related files
+docker-compose.override.yml
+*.db-journal
+.dockerignore
+
+# Ignore all built containers
+**/docker-compose.override.yml
+**/docker-compose.prod.yml
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore JetBrains IDE (PyCharm)
+.idea/
+
+# Ignore system files (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# Ignore GitHub Actions workflow cache
+.github/workflows/*.log
+.github/workflows/*.pyc
+.github/workflows/cache/
