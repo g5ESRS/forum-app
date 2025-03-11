@@ -1,16 +1,22 @@
 import pytest
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()  # Ensures we're using the correct user model
 
 @pytest.mark.django_db
 def test_admin_access(client):
-    # Create a superuser
-    User.objects.create_superuser(username='admin', password='adminpass', email='admin@example.com')
+    # Create a superuser using the correct User model
+    admin_user = User.objects.create_superuser(
+        username='admin',
+        password='adminpass',
+        email='admin@example.com'
+    )
 
-    # Log in as the superuser
-    client.login(username='admin', password='adminpass')
+    # Use force_login to bypass password hashing in tests
+    client.force_login(admin_user)
 
-    # Attempt to access the admin page
+    # Access the Django Admin panel
     response = client.get('/admin/')
 
-    # Check if the page loads successfully (200 OK)
+    # Assert that the admin page loads successfully (200 OK)
     assert response.status_code == 200

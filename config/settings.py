@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -30,7 +31,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_key")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 
 # Allowed hosts
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1").split()
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS",
+                          "localhost 127.0.0.1").split()
 
 
 # Application definition
@@ -42,8 +44,26 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'authentication',  # Authentication system
+
     # Third-party packages
     'rest_framework',  # Django REST Framework
+    'rest_framework.authtoken',
+    'django_extensions',  # manage.py  
+    # ---Django REST Auth----
+    'django.contrib.sites',
+    
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
+
+    # ---Django REST Auth----
+
+
+
 ]
 
 MIDDLEWARE = [
@@ -54,6 +74,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    # Required by django-allauth
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -140,3 +163,53 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+SITE_ID = 1
+#REST_USE_JWT = True
+#DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
+#TOKEN_MODEL = None
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'jwt-auth',
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+
+
+AUTH_USER_MODEL = 'authentication.CustomUser'
+
+# Email backend for password reset & email verification
+# For development, you can just print emails to console:
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+
+# ACCOUNT_EMAIL_REQUIRED = True
+# AUTHENTICATION_METHOD = 'EMAIL'
+# ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+#ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_EMAIL_REQUIRED = True
+#Following is added to enable registration with email instead of username
+AUTHENTICATION_BACKENDS = (
+ # `allauth` specific authentication methods, such as login by e-mail
+ "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # Remove or comment out SessionAuthentication if not needed:
+        # 'rest_framework.authentication.SessionAuthentication',
+    ),
+}
