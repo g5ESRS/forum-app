@@ -1,9 +1,37 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# IDE settings
 /.idea
-*.svg
+.idea/
+.vscode/
 
-# dependencies
+# Python files
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+.pytest_cache/
+
+# Virtual environment
+venv/
+#.env
+.env.local
+#*.env
+
+# Django files
+config/settings.pyc
+config/settings_local.py
+*/migrations/*.pyc
+*/migrations/__pycache__/
+
+# Database files
+*.sqlite3
+db.sqlite3
+*.db-journal
+
+# Frontend dependencies
 /frontend/node_modules
 /frontend/.pnp
 /frontend.pnp.*
@@ -12,33 +40,59 @@
 !/frontend.yarn/plugins
 !/frontend.yarn/releases
 !/frontend.yarn/versions
+*.svg
 
-# testing
+# Testing
 /frontend/coverage
 
-# next.js
+# Next.js
 /frontend/.next/
 /frontend/out/
 
-# production
+# Production
 /frontend/build
 
-# misc
-/frontend.DS_Store
+# Misc files
+.DS_Store
+Thumbs.db
 *.pem
 
-# debug
+# Logs
+logs/
+*.log
+debug.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# Environment files
 .env*
 
-# vercel
+# Vercel
 /frontend.vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 /frontend/next-env.d.ts
+
+# Static and Media files (unless you want to track them)
+static/
+media/
+/static/
+/media/
+
+# Docker-related files
+docker-compose.override.yml
+*.db-journal
+.dockerignore
+**/docker-compose.override.yml
+**/docker-compose.prod.yml
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints
+
+# GitHub Actions workflow cache
+.github/workflows/*.log
+.github/workflows/*.pyc
+.github/workflows/cache/
