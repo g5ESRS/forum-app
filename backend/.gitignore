@@ -7,29 +7,29 @@
 
 # Python files
 # Byte-compiled / optimized / DLL files
-__pycache__/
+backend/__pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.sqlite3
-.pytest_cache/
+backend/.pytest_cache/
 
 # Virtual environment
-venv/
+backend/venv/
 #.env
-.env.local
+backend/.env.local
 #*.env
 
 # Django files
-config/settings.pyc
-config/settings_local.py
-*/migrations/*.pyc
-*/migrations/__pycache__/
+backend/config/settings.pyc
+backend/config/settings_local.py
+backend/*/migrations/*.pyc
+backend/*/migrations/__pycache__/
 
 # Database files
-*.sqlite3
-db.sqlite3
-*.db-journal
+backend/*.sqlite3
+backend/db.sqlite3
+backend/*.db-journal
 
 # Frontend dependencies
 /frontend/node_modules
@@ -53,9 +53,9 @@ db.sqlite3
 /frontend/build
 
 # Misc files
-.DS_Store
-Thumbs.db
-*.pem
+backend/.DS_Store
+backend/Thumbs.db
+backend/*.pem
 
 # Logs
 logs/
@@ -85,7 +85,6 @@ media/
 # Docker-related files
 docker-compose.override.yml
 *.db-journal
-.dockerignore
 **/docker-compose.override.yml
 **/docker-compose.prod.yml
 

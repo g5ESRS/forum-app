@@ -9,6 +9,8 @@ on:
       - 'bugfix/*'
       - 'hotfix/*'
       - 'release/*'
+    paths:
+      - 'backend/**'
   pull_request:
     branches:
       - develop
@@ -18,6 +20,9 @@ jobs:
   pre-commit:
     name: Pre-Commit & Code Review
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -39,6 +44,9 @@ jobs:
   ci:
     name: Continuous Integration (Integration Tests)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     services:
       postgres:
         image: postgres:latest
@@ -75,6 +83,9 @@ jobs:
   build:
     name: Build & Containerize
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout Code
@@ -100,6 +111,9 @@ jobs:
   deploy-production:  # Fixed indentation here
     name: Deploy to Production
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
