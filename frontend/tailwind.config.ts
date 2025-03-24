@@ -46,8 +46,5 @@ export default {
       },
     },
   },
-  plugins: [
-      require("@tailwindcss/forms"), // Form styles for inputs
-      require("@tailwindcss/typography"), // Typography for posts
-  ],
+  plugins: [],
 };
