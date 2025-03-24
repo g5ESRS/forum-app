@@ -67,7 +67,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # Environment files
-.env*
+backend/.env
 
 # Vercel
 /frontend.vercel
@@ -95,3 +95,4 @@ docker-compose.override.yml
 .github/workflows/*.log
 .github/workflows/*.pyc
 .github/workflows/cache/
+/backend/.env.dev
