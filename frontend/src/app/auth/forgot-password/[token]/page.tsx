@@ -6,10 +6,10 @@ async function Page({
 }:{
     params: Promise<{ token:string }>
 }) {
-    const { token } = await params;
+    // const { token } = await params;
 
 
-
+    console.log(params);
     return (
         <div>
             <PasswordRecoveryForm />

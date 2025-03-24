@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import {Controller, useForm} from "react-hook-form";
