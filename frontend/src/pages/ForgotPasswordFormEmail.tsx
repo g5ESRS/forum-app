@@ -19,7 +19,7 @@ type ForgotPasswordFormData = z.infer<typeof ForgotPasswordSchema>;
 function ForgotPasswordFormEmail() {
     const defaultValues = useState<ForgotPasswordFormData>({
         email: "",
-    })
+    })[0];
 
     const {
         handleSubmit,
@@ -27,7 +27,7 @@ function ForgotPasswordFormEmail() {
         control,
     } = useForm<ForgotPasswordFormData>({
         resolver: zodResolver(ForgotPasswordSchema),
-        defaultValues: defaultValues,
+        defaultValues,
     });
 
     const onSubmit = (data: ForgotPasswordFormData) => {

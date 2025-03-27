@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main  # Now tests will trigger when pushing to main
-      - develop
+      - dev
       - 'feature/*'
       - 'bugfix/*'
       - 'hotfix/*'
@@ -13,7 +13,7 @@ on:
       - 'backend/**'
   pull_request:
     branches:
-      - develop
+      - dev
 
 jobs:
   # 1️⃣ Pre-Commit & Code Review Stage
