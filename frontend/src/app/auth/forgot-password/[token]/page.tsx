@@ -8,8 +8,8 @@ async function Page({
 }) {
     // const { token } = await params;
 
-
     console.log(params);
+
     return (
         <div>
             <PasswordRecoveryForm />

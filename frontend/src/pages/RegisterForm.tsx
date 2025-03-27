@@ -46,7 +46,7 @@ function RegisterForm() {
         control,
     } = useForm<RegisterFormData>({
         resolver: zodResolver(RegisterSchema),
-        defaultValues: defaultValues,
+        defaultValues,
     });
 
     const onSubmit = (data: RegisterFormData) => {

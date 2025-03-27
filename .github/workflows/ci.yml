@@ -5,6 +5,9 @@ on:
     branches: [main, dev]
     paths:
       - 'frontend/**'
+  pull_request:
+    branches:
+      - dev
 
 jobs:
   frontend-tests:
@@ -12,6 +15,7 @@ jobs:
     defaults:
       run:
         working-directory: frontend
+
 
     steps:
       - name: Checkout repository

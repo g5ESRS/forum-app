@@ -95,4 +95,4 @@ docker-compose.override.yml
 .github/workflows/*.log
 .github/workflows/*.pyc
 .github/workflows/cache/
-/backend/.env.dev
+/.env.dev

@@ -31,7 +31,7 @@ function LoginForm() {
         control,
     } = useForm<LoginFormData>({
         resolver: zodResolver(LoginSchema),
-        defaultValues: defaultValues,
+        defaultValues,
     });
 
     const onSubmit = (data: LoginFormData) => {
@@ -43,7 +43,7 @@ function LoginForm() {
             <form className={`space-y-4`} onSubmit={handleSubmit(onSubmit)} name={"LoginForm"}>
                 <FieldContainer label={"Username"} errorMessage={errors.username?.message}>
                     <Controller
-                        name="email"
+                        name="username"
                         control={control}
                         render={({field: {onChange, value}}) => (
                             <Input

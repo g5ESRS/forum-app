@@ -37,7 +37,7 @@ function PasswordRecoveryForm() {
         control,
     } = useForm<PasswordRecoveryFormData>({
         resolver: zodResolver(PasswordRecoveryFormSchema),
-        defaultValues: defaultValues,
+        defaultValues,
     });
 
     const onSubmit = (data: PasswordRecoveryFormData) => {
