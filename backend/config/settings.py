@@ -49,16 +49,17 @@ INSTALLED_APPS = [
     # Third-party packages
     'rest_framework',  # Django REST Framework
     'rest_framework.authtoken',
-    'django_extensions',  # manage.py  
+    'django_extensions',  # manage.py shell_plus, show_urls, runserver_plus, etc.
+    'django_filters',  # Django REST Framework filters
     # ---Django REST Auth----
     'django.contrib.sites',
-    
+
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    
+
 
     # ---Django REST Auth----
 
@@ -166,9 +167,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SITE_ID = 1
-#REST_USE_JWT = True
-#DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
-#TOKEN_MODEL = None
+# REST_USE_JWT = True
+# DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
+# TOKEN_MODEL = None
 
 REST_AUTH = {
     'USE_JWT': True,
@@ -184,32 +185,37 @@ SIMPLE_JWT = {
 }
 
 
-
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
 # Email backend for password reset & email verification
 # For development, you can just print emails to console:
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 
 # ACCOUNT_EMAIL_REQUIRED = True
 # AUTHENTICATION_METHOD = 'EMAIL'
 # ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
-#ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
-#Following is added to enable registration with email instead of username
+# Following is added to enable registration with email instead of username
 AUTHENTICATION_BACKENDS = (
- # `allauth` specific authentication methods, such as login by e-mail
- "allauth.account.auth_backends.AuthenticationBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # Remove or comment out SessionAuthentication if not needed:
-        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',# Remove or comment out SessionAuthentication if not needed:
+
+        
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 15,
+
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],#django_filters
+
 }
