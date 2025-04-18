@@ -55,7 +55,7 @@ def user_with_perm(db):
 @pytest.fixture
 def user_without_perm(db):
     """
-    Create a regular user without the 'add_group' permission.
+    Create a regular user without any permission.
     """
     user = User.objects.create_user(
         username="regular_user",

@@ -7,6 +7,10 @@
 # FILE: test_auth.py
 # TODO[test_auth.py]: improve test_coverae for authentication endpoints and delete unrequired routes
 
-
-#TODO: change name of the config app to a good name like forum  and name of the authentication app to auth
-
+# FILE: test_category.py
+#TODO: user_with_no_perm_cant_edit_category
+#TODO: user_with_no_perm_cant_delete_category
+#TODO: #user_with_perm_can_delete_category_and(_preserve_threads OR delete_threads)
+#TODO: #user_with_perm_can_(add,remove,change)_thread_to_category
+#TODO: make category simpler by having only name and description
+#TODO: nested categories

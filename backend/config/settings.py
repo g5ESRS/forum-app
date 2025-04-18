@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'authentication',  # Authentication system
-
+    'forum',   #main forum functionalities
     # Third-party packages
     'rest_framework',  # Django REST Framework
     'rest_framework.authtoken',
