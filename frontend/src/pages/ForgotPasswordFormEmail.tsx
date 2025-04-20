@@ -8,7 +8,8 @@ import FormContainer from "@/components/FormContainer";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import FieldContainer from "@/components/FieldContainer";
-import {authSchema} from "../../utils/schemas/auth";
+import {authSchema} from "@utils/schemas/auth";
+import {useRouter} from "next/navigation";
 
 const ForgotPasswordSchema = z.object({
     email: authSchema.email,
@@ -21,6 +22,8 @@ function ForgotPasswordFormEmail() {
         email: "",
     })[0];
 
+    const router = useRouter();
+
     const {
         handleSubmit,
         formState: { errors },
@@ -30,8 +33,19 @@ function ForgotPasswordFormEmail() {
         defaultValues,
     });
 
-    const onSubmit = (data: ForgotPasswordFormData) => {
-        console.log(data);
+    const onSubmit = async (data: ForgotPasswordFormData) => {
+        const res = await fetch(`/api/auth/emailrecovery`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: data.email }),
+        });
+
+        if (res.status !== 200) {
+            console.error("Bad Request");
+            return;
+        }
+        console.log("Email sent successfully");
+        router.push("/auth/forgot-password/success");
     }
 
     return (

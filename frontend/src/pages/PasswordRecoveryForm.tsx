@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {z} from "zod";
 import FormContainer from "@/components/FormContainer";
-import {authSchema} from "../../utils/schemas/auth";
+import {authSchema} from "@utils/schemas/auth";
 import FieldContainer from "@/components/FieldContainer";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Controller, useForm} from "react-hook-form";

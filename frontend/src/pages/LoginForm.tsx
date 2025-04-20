@@ -9,11 +9,12 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import FormContainer from "@/components/FormContainer";
 import FieldContainer from "@/components/FieldContainer";
 import Link from "next/link";
-import {authSchema} from "../../utils/schemas/auth";
+import {authSchema} from "@utils/schemas/auth";
+import {useRouter} from "next/navigation";
 
 
 const LoginSchema = z.object({
-    username: authSchema.username,
+    email: authSchema.email,
     password: authSchema.password,
 });
 
@@ -21,9 +22,13 @@ type LoginFormData = z.infer<typeof LoginSchema>;
 
 function LoginForm() {
     const defaultValues = useState<LoginFormData>({
-        username: "",
+        email: "",
         password: "",
     })[0];
+
+    const router = useRouter();
+
+    const [formError, setFormError] = useState<string | null>(null);
 
     const {
         handleSubmit,
@@ -34,21 +39,49 @@ function LoginForm() {
         defaultValues,
     });
 
-    const onSubmit = (data: LoginFormData) => {
-        console.log(data);
-    }
+    const onSubmit = async (data: LoginFormData) => {
+        setFormError(null);
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (res.status === 401) {
+                setFormError("Incorrect email or password.");
+                return;
+            }
+
+            if (!res.ok) {
+                setFormError("An unexpected error occurred. Please try again.");
+                return;
+            }
+
+            const result = await res.json();
+            console.log(result);
+            router.push('/profile');
+        } catch (err) {
+            setFormError("Failed to connect to server. Please try again later.");
+            console.error(err);
+        }
+    };
+
 
     return (
         <FormContainer topic={"Login"}>
             <form className={`space-y-4`} onSubmit={handleSubmit(onSubmit)} name={"LoginForm"}>
-                <FieldContainer label={"Username"} errorMessage={errors.username?.message}>
+                <FieldContainer label={"Email"} errorMessage={errors.email?.message}>
                     <Controller
-                        name="username"
+                        name="email"
                         control={control}
                         render={({field: {onChange, value}}) => (
                             <Input
                                 type="text"
-                                placeholder="Type your username"
+                                placeholder="Type your email"
                                 value={value}
                                 onChange={onChange}
                             />
@@ -69,6 +102,11 @@ function LoginForm() {
                         )}
                     />
                 </FieldContainer>
+
+                {formError && (
+                    <div className="text-sm text-red-600 text-center">{formError}</div>
+                )}
+
                 <Button type={"submit"} className={"w-full"}>Login</Button>
             </form>
             <div className={'flex justify-between py-2'}>

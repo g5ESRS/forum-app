@@ -11,21 +11,22 @@ import Input from "@/components/Input";
 import {Controller, useForm} from "react-hook-form";
 import Button from "@/components/Button";
 import Link from "next/link";
-import {authSchema} from "../../utils/schemas/auth";
+import {authSchema} from "@utils/schemas/auth";
+import {useRouter} from "next/navigation";
 
 // Email, username, password
 
 const RegisterSchema = z.object({
     email: authSchema.email,
     username: authSchema.username,
-    password: authSchema.password,
-    cPassword: authSchema.password,
-}).superRefine(({cPassword, password}, ctx) => {
-    if (password !== cPassword){
+    password1: authSchema.password,
+    password2: authSchema.password,
+}).superRefine(({password2, password1}, ctx) => {
+    if (password1 !== password2){
         ctx.addIssue({
             code: "custom",
             message: "Passwords don't match",
-            path: ["cPassword"],
+            path: ["password2"],
         })
     }
 })
@@ -33,12 +34,16 @@ const RegisterSchema = z.object({
 type RegisterFormData = z.infer<typeof RegisterSchema>;
 
 function RegisterForm() {
+    const router = useRouter();
+
     const defaultValues = useState<RegisterFormData>({
         email: "",
         username: "",
-        password: "",
-        cPassword: "",
+        password1: "",
+        password2: "",
     })[0];
+
+    const [formError, setFormError] = useState<string | null>(null);
 
     const {
         handleSubmit,
@@ -49,8 +54,36 @@ function RegisterForm() {
         defaultValues,
     });
 
-    const onSubmit = (data: RegisterFormData) => {
-        console.log(data);
+    const onSubmit = async (data: RegisterFormData) => {
+        setFormError(null);
+
+        try {
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (res.status === 401) {
+                setFormError("Incorrect username, email or password.");
+                return;
+            }
+
+            if (!res.ok) {
+                setFormError("An unexpected error occurred. Please try again.");
+                return;
+            }
+
+            const result = await res.json();
+            console.log(result);
+            router.push('/profile');
+
+        } catch (err) {
+            setFormError("Failed to connect to server. Please try again later.");
+            console.error(err);
+        }
     }
 
     return (
@@ -86,9 +119,9 @@ function RegisterForm() {
                     />
                 </FieldContainer>
 
-                <FieldContainer label={'Password'} errorMessage={errors.password?.message}>
+                <FieldContainer label={'Password'} errorMessage={errors.password1?.message}>
                     <Controller
-                        name='password'
+                        name='password1'
                         control={control}
                         render={({ field: { onChange, value } }) => (
                             <Input
@@ -101,9 +134,9 @@ function RegisterForm() {
                     />
                 </FieldContainer>
 
-                <FieldContainer label={'Confirm Password'} errorMessage={errors.cPassword?.message}>
+                <FieldContainer label={'Confirm Password'} errorMessage={errors.password2?.message}>
                     <Controller
-                        name='cPassword'
+                        name='password2'
                         control={control}
                         render={({ field: { onChange, value } }) => (
                             <Input
@@ -117,6 +150,11 @@ function RegisterForm() {
                 </FieldContainer>
                 <Button type={"submit"} className={"w-full"}>Register</Button>
             </form>
+
+            {formError && (
+                <div className="text-sm text-red-600 text-center">{formError}</div>
+            )}
+
             <div className={'flex justify-between py-2'}>
                 <p>Already have an account?</p>
                 <Link href={'login'} className={'text-primary hover:text-primary-hover'}>Login</Link>

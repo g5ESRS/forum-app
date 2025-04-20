@@ -68,6 +68,8 @@ yarn-error.log*
 
 # Environment files
 backend/.env
+frontend/.env
+frontend/.env.docker
 
 # Vercel
 /frontend.vercel

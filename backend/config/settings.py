@@ -32,7 +32,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 
 # Allowed hosts
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS",
-                          "localhost 127.0.0.1").split()
+                          "localhost web 127.0.0.1").split()
 
 
 # Application definition
