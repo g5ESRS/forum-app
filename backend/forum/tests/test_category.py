@@ -74,10 +74,18 @@ def test_everybody_can_see_category_list(api_client):
     Verify that any user, even without permissions, can list categories.
     """
     Category.objects.create(name="Public", slug="public", description="Visible")
+    Category.objects.create(name="Another", slug="another", description="Another category")
+    
     url = reverse("categories-list")
     response = api_client().get(url)
+
+    # Handle pagination if enabled
+    response_data = response.data.get("results", response.data)
+
+    # Explicitly order the queryset by name in the test
+    categories = Category.objects.order_by("name")
     assert response.status_code == status.HTTP_200_OK
-    assert len(response.data) >= 1
+    assert len(response_data) == categories.count()
 
 #TODO: user_with_no_perm_cant_edit_category
 #TODO: user_with_no_perm_cant_delete_category
