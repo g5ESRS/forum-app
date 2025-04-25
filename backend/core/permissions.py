@@ -23,13 +23,23 @@ class AnyReadOrDjangoPermission(permissions.DjangoModelPermissionsOrAnonReadOnly
             return True
         return super().has_permission(request, view)
     
+class IsFieldOwner(permissions.BasePermission):
+    """
+    Allows access only to users who match a specific field on the object.
+    """
 
+    owner_field = "user"  # can be set dynamically from view
+
+    def has_object_permission(self, request, view, obj):
+        field = getattr(view, "owner_field", self.owner_field)
+        owner = getattr(obj, field, None)
+        return owner == request.user
 
 class IsOwner(permissions.BasePermission):
     """
     Allow access if user is the owner of the object,
     """
-    # You can optionally customize this in your view
+    # can be set dynamically from view
     owner_field = 'author'    # or 'owner', 'user', etc.
 
     def has_permission(self, request, view):
