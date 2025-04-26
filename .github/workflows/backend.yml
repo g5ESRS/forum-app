@@ -9,6 +9,7 @@ on:
       - 'bugfix/*'
       - 'hotfix/*'
       - 'release/*'
+      - 'chore/*'
     paths:
       - 'backend/**'
   pull_request:
