@@ -14,7 +14,7 @@ backend/__pycache__/
 *.sqlite3
 backend/.pytest_cache/
 
-# Virtual environment
+# Virtual environment directories
 backend/venv/
 #.env
 backend/.env.local
