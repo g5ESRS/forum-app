@@ -1,43 +1,41 @@
 services:
   web:
-    build: ./backend
+    build: ../backend
     container_name: django_app
     command: sh -c "python manage.py collectstatic --noinput &&
                     python manage.py migrate &&
                     python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./backend:/app
-      - ./backend/static:/app/static  # Store static files persistently
-      - ./backend/media:/app/media    # Store media files persistently
+      - ../backend:/app
+      - ../backend/static:/app/static
+      - ../backend/media:/app/media
     ports:
       - "8000:8000"
     depends_on:
       - db
     env_file:
-      - /backend/.env.dev
+      - ./../backend/.env.dev
 
   db:
     image: postgres:17.4
     container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    env_file:
-      - /backend/.env.dev
 
-  pgadmin:  # 🆕 Add pgAdmin Service
+  pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com  # Change this
-      PGADMIN_DEFAULT_PASSWORD: admin123  # Change this
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
       - "5050:80"
     depends_on:
@@ -46,22 +44,17 @@ services:
       - pgadmin_data:/var/lib/pgadmin
 
   front:
-    build: ./frontend
+    build: ../frontend
     container_name: nextjs_app
-    command: npm start
-    volumes:
-      - /app
-      - /app/node_modules
-      - /app/.next
     ports:
       - "3000:3000"
     depends_on:
       - web
     env_file:
-        - /frontend/.env.docker
+      - ./../frontend/.env.docker
 
 volumes:
   postgres_data:
   static_volume:
   media_volume:
-  pgadmin_data:  
+  pgadmin_data:
