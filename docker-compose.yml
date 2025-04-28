@@ -45,20 +45,20 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
-  front:
-    build: ./frontend
-    container_name: nextjs_app
-    command: npm start
-    volumes:
-      - /app
-      - /app/node_modules
-      - /app/.next
-    ports:
-      - "3000:3000"
-    depends_on:
-      - web
-    env_file:
-        - /frontend/.env.docker
+#  front:
+#    build: ./frontend
+#    container_name: nextjs_app
+#    command: npm start
+#    volumes:
+#      - /app
+#      - /app/node_modules
+#      - /app/.next
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - web
+#    env_file:
+#        - /frontend/.env.docker
 
 volumes:
   postgres_data:

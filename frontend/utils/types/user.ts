@@ -1,7 +1,24 @@
 export interface BaseUser {
-    pk: number;
+    id: number;
     username: string;
     email: string;
-    first_name: string;
-    last_name: string;
+}
+
+export interface UserDetails extends BaseUser {
+    groups: Group[];
+    user_permissions: Permission[];
+    permissions: Permission[];
+}
+
+export interface Permission {
+    id: number;
+    name: string;
+    codename: string;
+    content_type: number;
+}
+
+export interface Group {
+    id: number;
+    name: string;
+    permissions: Permission[];
 }

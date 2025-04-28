@@ -1,5 +1,5 @@
 import React from 'react';
-import ForgotPasswordFormEmail from "@/pages/ForgotPasswordFormEmail";
+import ForgotPasswordFormEmail from "@/pages/auth/ForgotPasswordFormEmail";
 
 function ForgotPassword() {
 

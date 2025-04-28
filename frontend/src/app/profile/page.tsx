@@ -1,5 +1,5 @@
 import React from 'react';
-import ProfilePage from "@/pages/ProfilePage";
+import ProfilePage from "@/pages/auth/ProfilePage";
 
 function Profile(
 

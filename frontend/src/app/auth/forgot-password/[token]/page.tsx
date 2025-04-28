@@ -1,5 +1,5 @@
 import React from 'react';
-import PasswordRecoveryForm from "@/pages/PasswordRecoveryForm";
+import PasswordRecoveryForm from "@/pages/auth/PasswordRecoveryForm";
 
 async function Page({
                         params,

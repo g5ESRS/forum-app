@@ -1,7 +1,12 @@
+import {getAccessToken} from "@utils/auth/auth";
+
 export async function fetchWithAuth(path: string, init: RequestInit = {}) {
     const res = await fetch(path, {
         ...init,
         credentials: 'include',
+        headers:{
+            'Authorization': `Bearer ${await getAccessToken()}`,
+        }
     });
 
     if (res.status === 401) {
