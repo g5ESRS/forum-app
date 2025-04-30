@@ -1,7 +1,8 @@
 import pytest
 from django.urls import reverse
+from core.utils import _get_results
 from rest_framework import status
-from communication.models import Notification
+from communication.models import Notification, Message
 from django.contrib.auth import get_user_model
 
 
@@ -75,9 +76,45 @@ def test_user_cannot_update_others_notification(api_client):
     note.refresh_from_db()
     assert note.is_read is False
 
+@pytest.mark.django_db
+def test_user_can_get_number_of_unread_notifications(api_client):
+
+    receiver = User.objects.create_user(username="bob", password="pass")
+
+    Notification.objects.create(receiver=receiver, message="Read Message", is_read=True)
+    Notification.objects.create(receiver=receiver, message="Unread Message", is_read=False)
+
+
+
+    url = reverse("unread-notification-count")
+    response = api_client(receiver).get(url)
+    result = _get_results(response)
+
+    assert response.status_code == 200
+    assert result["unread_count"] == 1
+
+
+    
+@pytest.mark.django_db
+def test_user_can_mark_all_notifications_as_read(api_client):
+    user = User.objects.create_user(username="bob", password="pass")
+
+    # Create notifications
+    Notification.objects.create(receiver=user, message="Message 1", is_read=False)
+    Notification.objects.create(receiver=user, message="Message 2", is_read=False)
+
+    # Mark all notifications as read
+    url = reverse("notifications-mark-all-read")
+    response = api_client(user).post(url)
+
+    read_notifications = Notification.objects.filter(receiver=user, is_read=True).count()
+
+    assert response.status_code == 200
+    assert read_notifications == 2  # Verify all notifications are marked as read
+
+
+
 # TODO: def test_notification_contains_link_to_target()
-
-
 """TODO: admin level notification
 def test_user_with_perm_can_see_notification_list(api_client, user_with_perm):
 def test_user_without_perm_cant_see_notification_list

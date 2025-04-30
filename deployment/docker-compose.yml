@@ -13,6 +13,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - redis
     env_file:
       - ./../backend/.env.dev
 
@@ -53,8 +54,18 @@ services:
     env_file:
       - ./../frontend/.env.docker
 
+  redis:
+    image: redis:7
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"  # expose redis
+    volumes:
+      - redis_data:/data #persist data
+
 volumes:
   postgres_data:
   static_volume:
   media_volume:
   pgadmin_data:
+  redis_data: 

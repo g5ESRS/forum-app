@@ -60,23 +60,6 @@ def test_user_can_list_their_messages(api_client):
 
 
 @pytest.mark.django_db
-def test_user_can_get_number_of_unread_messages(api_client):
-    sender = User.objects.create_user(username="alice", password="pass")
-    receiver = User.objects.create_user(username="bob", password="pass")
-
-    Message.objects.create(sender=sender, receiver=receiver, content="Hey Bob!", is_read=False)
-    Message.objects.create(sender=sender, receiver=receiver, content="Hey Bob2!", is_read=True)
-
-
-    url = reverse("unread-message-count")
-    response = api_client(receiver).get(url)
-    result = _get_results(response)
-
-    assert response.status_code == 200
-    assert result["unread_count"] == 1
-
-
-@pytest.mark.django_db
 def test_user_cannot_view_others_messages(api_client):
     sender = User.objects.create_user(username="alice", password="pass")
     receiver = User.objects.create_user(username="bob", password="pass")
@@ -162,42 +145,6 @@ def test_user_can_filter_messages_by_sender(api_client):
     assert response.status_code == 200
     assert len(response.data["results"]) == 1
     assert response.data["results"][0]["content"] == "Message from Alice"  
-    
-    
-@pytest.mark.django_db
-def test_user_can_mark_all_notifications_as_read(api_client):
-    user = User.objects.create_user(username="bob", password="pass")
-    sender = User.objects.create_user(username="alice", password="pass")
-
-    # Create messages
-    Message.objects.create(sender=sender, receiver=user, content="Message 1", is_read=False)
-    Message.objects.create(sender=sender, receiver=user, content="Message 2", is_read=False)
-
-    # Mark all messages as read
-    url = reverse("messages-mark-all-read")
-    response = api_client(user).post(url)
-
-    assert response.status_code == 200
-
-    # Verify all messages are marked as read
-    unread_messages = Message.objects.filter(receiver=user, is_read=False).count()
-    assert unread_messages == 0
 
 
-@pytest.mark.django_db
-def test_user_can_filter_unread_messages(api_client):
-    sender = User.objects.create_user(username="alice", password="pass")
-    receiver = User.objects.create_user(username="bob", password="pass")
 
-    # Create messages
-    Message.objects.create(sender=sender, receiver=receiver, content="Message 1", is_read=True)
-    Message.objects.create(sender=sender, receiver=receiver, content="Message 2", is_read=False)
-
-    # Filter unread messages
-    url = reverse("message-list") + "?is_read=false"
-    response = api_client(receiver).get(url)
-    result = _get_results(response)
-
-    assert response.status_code == 200
-    assert len(response.data["results"]) == 1
-    assert result[0]["content"] == "Message 2"

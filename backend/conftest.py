@@ -93,3 +93,5 @@ def check_access_denied(api_client):
         return response  # Return response in case additional assertions are needed
 
     return _check  # Return function for reuse
+
+

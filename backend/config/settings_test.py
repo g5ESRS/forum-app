@@ -9,6 +9,12 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    }
+}
+
 # Optionally override other test-specific settings
 DEBUG = True  # Disable debug mode for tests
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]  # Faster password hashing
