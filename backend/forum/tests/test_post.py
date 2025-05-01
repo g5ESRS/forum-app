@@ -5,7 +5,7 @@ from forum.models import Post, Topic, Category
 from django.contrib.auth import get_user_model
 
 
-
+User= get_user_model()
 
 @pytest.mark.django_db
 def test_guest_cant_create_post(api_client):
@@ -36,6 +36,34 @@ def test_post_requires_topic(api_client, user_without_perm):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert "topic" in response.data
 
+@pytest.mark.django_db
+def test_user_automatically_gets_post_perm_on_register():
+    """
+    This test checks if the user automatically gets the post permissions after being created.
+    """
+    # Create a new user
+    user = User.objects.create_user(username="newuser", password="newpass")
+    
+    # Check if the user has the required permissions
+    assert user.has_perm("forum.add_post")
+    assert user.has_perm("forum.view_post")
+
+@pytest.mark.django_db
+def test_cannot_post_to_closed_topic(api_client):
+    user = User.objects.create_user(username="u", password="pass")
+    category = Category.objects.create(name="General", slug="general")
+    closed_topic = Topic.objects.create(title="Closed Topic", content="No replies", author=user, category=category, closed=True)
+
+    url = reverse("posts-list")
+    data = {
+        "topic": closed_topic.id,
+        "content": "I want to reply"
+    }
+
+    response = api_client(user).post(url, data, format="json")
+
+    assert response.status_code == 403
+    assert "closed" in response.data["detail"].lower()
 
 """
 TODO: IMPORTANT after user is created automatically get post(add,view) permissions 
