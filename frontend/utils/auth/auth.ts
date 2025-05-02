@@ -1,3 +1,5 @@
+'use server'
+
 import { cookies } from 'next/headers';
 import {BaseUser} from "@utils/types/user";
 
@@ -8,7 +10,6 @@ export async function setAuthCookies(access: string, refresh: string, user: Base
         secure: true,
         sameSite: 'strict',
         path: '/',
-        maxAge: 900,
     });
     cookieStore.set('refresh_token', refresh, {
         httpOnly: true,

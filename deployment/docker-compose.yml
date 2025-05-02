@@ -3,6 +3,7 @@ services:
     build: ../backend
     container_name: django_app
     command: sh -c "python manage.py collectstatic --noinput &&
+                    python manage.py makemigrations &&
                     python manage.py migrate &&
                     python manage.py runserver 0.0.0.0:8000"
     volumes:
@@ -50,8 +51,10 @@ services:
       - "3000:3000"
     depends_on:
       - web
-    env_file:
-      - ./../frontend/.env.docker
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: http://web:8000
+#    env_file:
+#      - ./../frontend/.env.docker
 
 volumes:
   postgres_data:

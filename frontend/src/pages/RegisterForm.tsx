@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {z} from "zod";
 import {useState} from "react";
 
@@ -13,6 +13,7 @@ import Button from "@/components/Button";
 import Link from "next/link";
 import {authSchema} from "@utils/schemas/auth";
 import {useRouter} from "next/navigation";
+import {useAuth} from "@/context/AuthContext";
 
 // Email, username, password
 
@@ -35,6 +36,14 @@ type RegisterFormData = z.infer<typeof RegisterSchema>;
 
 function RegisterForm() {
     const router = useRouter();
+    const { user, login, refreshUser } = useAuth();
+
+    // Redirect if user is already logged in
+    useEffect(() => {
+        if (user) {
+            router.push('/profile');
+        }
+    }, [user, router]);
 
     const defaultValues = useState<RegisterFormData>({
         email: "",
@@ -72,12 +81,22 @@ function RegisterForm() {
             }
 
             if (!res.ok) {
-                setFormError("An unexpected error occurred. Please try again.");
+                const errorData = await res.json().catch(() => null);
+                setFormError(errorData?.message || "An unexpected error occurred. Please try again.");
                 return;
             }
 
-            const result = await res.json();
-            console.log(result);
+            // After successful registration, log the user in
+            const loginResult = await login(data.email, data.password1);
+
+            if (!loginResult.success) {
+                setFormError("Registration successful, but failed to log in automatically. Please login manually.");
+                router.push('/auth/login');
+                return;
+            }
+
+            // If login is successful, refresh the user state and redirect to profile
+            await refreshUser();
             router.push('/profile');
 
         } catch (err) {
@@ -148,12 +167,13 @@ function RegisterForm() {
                         )}
                     />
                 </FieldContainer>
-                <Button type={"submit"} className={"w-full"}>Register</Button>
-            </form>
 
-            {formError && (
-                <div className="text-sm text-red-600 text-center">{formError}</div>
-            )}
+                {formError && (
+                    <div className="text-sm text-red-600 text-center">{formError}</div>
+                )}
+
+                <Button type="submit" className="w-full">Register</Button>
+            </form>
 
             <div className={'flex justify-between py-2'}>
                 <p>Already have an account?</p>
