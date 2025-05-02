@@ -34,14 +34,3 @@ class PrivateMessageViewSet(ModelViewSet):
         Message.objects.filter(receiver=user, is_read=False).update(is_read=True)
         return Response({"detail": "All messages marked as read."}, status=200)
 
-
-class UnreadMessageCountViewSet(ViewSet):
-    """
-    A simple ViewSet to return the count of unread messages for the authenticated user.
-    """
-    permission_classes = [IsAuthenticated]
-
-    def list(self, request):
-        user = request.user
-        unread_count = Message.objects.filter(receiver=user, is_read=False).count()
-        return Response({"unread_count": unread_count})

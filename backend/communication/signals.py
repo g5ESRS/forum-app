@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from communication.models import Message, Notification
+from application.services.notification_service import NotificationService
 
 @receiver(post_save, sender=Message)
 def create_notification_for_new_message(sender, instance, created, **kwargs):
@@ -12,3 +13,4 @@ def create_notification_for_new_message(sender, instance, created, **kwargs):
             receiver=instance.receiver,
             message=instance.content,
         )
+        NotificationService.invalidate_unread_cache(instance.receiver)
