@@ -10,7 +10,7 @@ urlpatterns = [
 
     #categories
     path('categories/', CategoryViewSet.as_view({'post': 'create', 'get': 'list'}), name='categories-list'),
-    path('categories/<int:pk>/', CategoryViewSet.as_view({'patch': 'partial_update','delete':'destroy'}), name='categories-detail'),
+    path('categories/<int:pk>/', CategoryViewSet.as_view({'get':'retrieve','patch': 'partial_update','delete':'destroy'}), name='categories-detail'),
 
     #topics:
     path('topics/', TopicViewSet.as_view({'get': 'list', 'post': 'create'}), name='topics-list'),

@@ -130,3 +130,11 @@ class TopicDetailSerializer(serializers.ModelSerializer):
         return topic
 
 
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    topics = TopicListSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'slug', 'description','is_active', 'topics']
+
+
