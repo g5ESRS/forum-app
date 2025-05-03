@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # Third-party packages
     'rest_framework',  # Django REST Framework
     'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
     'django_extensions',  # manage.py shell_plus, show_urls, runserver_plus, etc.
     'django_filters',  # Django REST Framework filters
     # ---Django REST Auth----
@@ -168,20 +169,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SITE_ID = 1
-# REST_USE_JWT = True
 # DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
 # TOKEN_MODEL = None
 
+# Update the configuration to use the correct format for dj-rest-auth 2.x
 REST_AUTH = {
     'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'jwt-auth',
+    'JWT_AUTH_HTTPONLY':False
 }
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
+    "BLACKLIST_AFTER_ROTATION": True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 

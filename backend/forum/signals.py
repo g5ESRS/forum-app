@@ -7,17 +7,27 @@ from forum.models import Topic, Post
 
 User = get_user_model()
 
-
+"""
+Assigns 'add_topic', 'view_topic', 'add_post', and 'view_post' permissions to a user when they are created.
+"""
 @receiver(post_save, sender=User)
 def assign_topic_permissions_to_user(sender, instance, created, **kwargs):
 
     if created:  # Add a flag for flexibility
         assign_user_permissions(instance)
 
-    """
-    Assigns 'add_topic', 'view_topic', 'add_post', and 'view_post' permissions to a user when they are created.
-    """
 
+
+
+
+@receiver(post_save, sender=Post)
+def update_topic_last_activity(sender, instance, created, **kwargs):
+    if created:
+        topic = instance.topic
+        topic.last_activity = instance.created_at
+        topic.save(update_fields=['last_activity'])
+
+        
 
 def assign_user_permissions(user):
     # Assign topic permissions

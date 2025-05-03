@@ -5,7 +5,6 @@ from rest_framework import serializers
 from authentication.serializers.group_serializers import GroupSerializer,PermissionSerializer
 from django.contrib.auth.models import Permission
 
-
 class UserSerializer(serializers.ModelSerializer):
 
     # Make groups and user_permissions writable

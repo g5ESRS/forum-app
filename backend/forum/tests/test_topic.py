@@ -335,6 +335,59 @@ def test_tags_automatically_added_to_topic_on_creation(api_client):
     assert topic_tags.filter(slug="slug2").exists(), "Tags not found in topic"
 
 
+@pytest.mark.django_db
+def test_topic_last_activity_updates_on_post():
+    user = User.objects.create_user(username="some_user", password="testpass")
+    topic = Topic.objects.create(title="Test Topic", content="Testing last activity", author=user)
+
+    post = Post.objects.create(topic=topic, content="Reply", author=user)
+
+    topic.refresh_from_db()
+    assert topic.last_activity == post.created_at
+
+
+
+import pytest
+from django.urls import reverse
+from django.utils.timezone import now
+from datetime import timedelta
+from forum.models import Topic, Category, TopicViewLog
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+@pytest.mark.django_db
+def test_topic_view_tracking_updates_view_count_correctly(api_client):
+    user = User.objects.create_user(username="viewer", password="testpass")
+    category = Category.objects.create(name="General", slug="general")
+    topic = Topic.objects.create(title="Test Topic", content="Some content", author=user, category=category)
+
+    url = reverse("topics-detail", kwargs={"pk": topic.pk})
+
+    client = api_client(user)
+
+    # First view — should increase view count
+    response1 = client.get(url)
+    topic.refresh_from_db()
+    assert response1.status_code == 200
+    assert topic.views == 1
+    assert TopicViewLog.objects.filter(user=user, topic=topic).exists()
+
+    # Second view within 1 hour — should NOT increase view count
+    response2 = client.get(url)
+    topic.refresh_from_db()
+    assert topic.views == 1  # No change
+
+    # Manually backdate the TopicViewLog to simulate 1 hour passing
+    view_log = TopicViewLog.objects.get(user=user, topic=topic)
+    view_log.viewed_at = now() - timedelta(hours=1, minutes=1)
+    view_log.save(update_fields=["viewed_at"])
+
+    # Third view after 1 hour — should increase view count
+    response3 = client.get(url)
+    topic.refresh_from_db()
+    assert topic.views == 2
+
 
 """
 TODO: IMPORTANT after user is created automatically get topic(add,view,) permissions 
