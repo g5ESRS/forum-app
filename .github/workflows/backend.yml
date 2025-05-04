@@ -153,5 +153,6 @@ jobs:
             git pull origin chore/deploy-3-container-orchestration
 
             # Ensure Docker Compose is up-to-date
+            cd deployment  # Navigate to the directory containing docker-compose.yml
             docker-compose pull
             docker-compose up -d --remove-orphans
