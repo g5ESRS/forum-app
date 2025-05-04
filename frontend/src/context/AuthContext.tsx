@@ -3,7 +3,6 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { fetchWithAuth } from "@utils/auth/fetchWithAuth";
-import { BASE_URL } from "@utils/constants";
 import { BaseUser } from "@utils/types/user";
 
 type AuthContextType = {
