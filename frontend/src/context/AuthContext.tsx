@@ -28,7 +28,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refreshUser = async () => {
         try {
-            console.log("Fetching user data")
             const response = await fetchWithAuth(`${BASE_URL}/api/auth/user`)
 
             if (response.status === 200) {

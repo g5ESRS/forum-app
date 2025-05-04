@@ -11,7 +11,6 @@ export async function POST(req: Request) {
         return new Response("Invalid JSON", {status: 400});
     }
 
-    console.log("Received body:", body);
     const res = await fetch(`${BACKEND_URL}/api/auth/registration/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
