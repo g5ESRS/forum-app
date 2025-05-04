@@ -16,7 +16,6 @@ export default function ProfilePage() {
         if (loading) return; // Don't redirect while loading
 
         if (!user) {
-            console.log(user);
             console.error('User not found, redirecting to login');
             router.push(LoginLinkFactory());
         }

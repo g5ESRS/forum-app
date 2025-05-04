@@ -3,6 +3,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { fetchWithAuth } from "@utils/auth/fetchWithAuth";
+import { BASE_URL } from "@utils/constants";
 import { BaseUser } from "@utils/types/user";
 
 type AuthContextType = {
@@ -27,7 +28,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refreshUser = async () => {
         try {
-            console.log("Fetching user data")
             const response = await fetchWithAuth(`/api/auth/user`)
 
             if (response.status === 200) {

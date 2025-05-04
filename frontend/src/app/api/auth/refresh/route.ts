@@ -1,12 +1,12 @@
-import {getRefreshToken, setAccessToken} from "@utils/auth/auth";
 import {BACKEND_URL} from "@utils/constants";
 
-export async function POST() {
-    const refreshToken = await getRefreshToken();
+export async function POST(req: Request) {
+    const reqbody = await req.json();
+
+    const refreshToken = reqbody.refresh;
 
     if (!refreshToken) return new Response('No refresh token', { status: 401 });
-
-    const res = await fetch(`${BACKEND_URL}/api/token/refresh/`, {
+    const res = await fetch(`${BACKEND_URL}/api/auth/token/refresh/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refresh: refreshToken }),
@@ -14,8 +14,7 @@ export async function POST() {
 
     if (!res.ok) return new Response('Refresh failed', { status: 401 });
 
-    const { access } = await res.json();
-    await setAccessToken(access);
+    const tokens = await res.json();
 
-    return new Response('Refreshed');
+    return new Response(JSON.stringify(tokens), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }

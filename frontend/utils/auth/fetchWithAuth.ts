@@ -1,5 +1,5 @@
-import {BACKEND_URL} from "@utils/constants";
-import {getAccessToken, getRefreshToken} from "@utils/auth/auth";
+import {BASE_URL} from "@utils/constants";
+import {getAccessToken, getRefreshToken, setAccessToken, setRefreshToken} from "@utils/auth/auth";
 import {NextResponse} from "next/server";
 
 export async function fetchWithAuth(path: string, init: RequestInit = {}, count:number = 0) {
@@ -19,16 +19,26 @@ export async function fetchWithAuth(path: string, init: RequestInit = {}, count:
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
         }
 
-        const refreshRes = await fetch(`${BACKEND_URL}/api/auth/refresh`, {
+        const refreshToken = await getRefreshToken();
+
+        const refreshRes = await fetch(`${BASE_URL}/api/auth/refresh/`, {
             method: 'POST',
             credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${await getRefreshToken()}`,
             },
             cache: 'no-store',
+            body: JSON.stringify({'refresh': refreshToken}),
         });
         if (!refreshRes.ok) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+
+        const refreshData = await refreshRes.json();
+        if (!refreshData) {
+            return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+        }
+
+        await setAccessToken(refreshData.access);
+        await setRefreshToken(refreshData.refresh);
 
         if (count > 4) {
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
