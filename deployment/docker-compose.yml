@@ -45,17 +45,17 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
-  front:
-    build: ../frontend
-    container_name: nextjs_app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - web
-    environment:
-      NEXT_PUBLIC_BACKEND_URL: http://web:8000
-    env_file:
-      - ./../frontend/.env.docker
+#  front:
+#    build: ../frontend
+#    container_name: nextjs_app
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - web
+#    environment:
+#      NEXT_PUBLIC_BACKEND_URL: http://web:8000
+#    env_file:
+#      - ./../frontend/.env.docker
 
   redis:
     image: redis:7

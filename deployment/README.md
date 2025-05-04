@@ -9,5 +9,5 @@
 From the project root, run:
 
 ```bash
-docker-compose -f deployment/docker-compose.yml up --build
+docker-compose -f docker-compose.yml up --build
 ```
