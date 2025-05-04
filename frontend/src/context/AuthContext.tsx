@@ -4,6 +4,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { fetchWithAuth } from "@utils/auth/fetchWithAuth";
 import { BaseUser } from "@utils/types/user";
+import {setAccessToken, setRefreshToken} from "@utils/auth/auth";
 
 type AuthContextType = {
     user: BaseUser | null
@@ -64,6 +65,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (!res.ok) {
                 return { success: false, error: "An unexpected error occurred. Please try again." };
             }
+
+            const result = await res.json();
+
+            console.log("Login result:", result);
+
+            const { access, refresh } = result.result;
+
+            await setAccessToken(access);
+            await setRefreshToken(refresh);
 
             await refreshUser();
             return { success: true };

@@ -45,5 +45,5 @@ export async function POST(req: Request) {
         return new Response("Failed to set authentication cookies", { status: 500 });
     }
 
-    return Response.json({ user });
+    return Response.json({ result });
 }
