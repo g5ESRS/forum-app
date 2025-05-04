@@ -120,7 +120,6 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/chore/deploy-3-container-orchestration'
     environment:
       name: production
-      url: ${{ secrets.PRODUCTION_URL }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
