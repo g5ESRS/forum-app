@@ -34,7 +34,7 @@ def api_client():
     return get_client
 @pytest.fixture
 def user_with_perm(db):
-    """Returns a function that creates a user with a specific permission."""
+    """Returns a function that creates a user with a specific permission only."""
     def _create_user(permission_name):
         user = User.objects.create_user(
             username=f"user_with_{permission_name}",
@@ -42,12 +42,14 @@ def user_with_perm(db):
             password="securepass"
         )
 
-        # Get or create the requested permission
+        # Clear auto-assigned permissions
+        user.user_permissions.clear()
+        user.groups.clear()  
+
+        # Assign only the requested permission
         permission = Permission.objects.get(codename=permission_name)
-        
-        # Assign permission directly to the user
         user.user_permissions.add(permission)
-        
+
         return user
 
     return _create_user
@@ -55,15 +57,17 @@ def user_with_perm(db):
 @pytest.fixture
 def user_without_perm(db):
     """
-    Create a regular user without any permission.
+    Create a regular user and manually remove all permissions for testing.
     """
     user = User.objects.create_user(
         username="regular_user",
-        password="regularpazss",
+        password="regularpass",
         email="regular@example.com"
     )
+    user.user_permissions.clear()
+    user.groups.clear()  
+    
     return user
-
 
 
 
@@ -93,3 +97,5 @@ def check_access_denied(api_client):
         return response  # Return response in case additional assertions are needed
 
     return _check  # Return function for reuse
+
+

@@ -1,17 +1,22 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+from django.utils.timezone import now
 
 User = get_user_model()
 
 
 class Category(models.Model):
+    # ...existing fields...
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["name"]  # Default ordering by name
 
     def __str__(self):
         return self.name
@@ -75,3 +80,19 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.author} on {self.topic}"
+
+
+class TopicViewLog(models.Model):
+    """
+    Tracks when users view topics to prevent duplicate view counts
+    within a short time period.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(default=now)
+    
+    class Meta:
+        unique_together = ['user', 'topic']
+    
+    def __str__(self):
+        return f"{self.user.username} viewed {self.topic.title}"

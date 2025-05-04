@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import {Controller, useForm} from "react-hook-form";
@@ -11,6 +11,7 @@ import FieldContainer from "@/components/FieldContainer";
 import Link from "next/link";
 import {authSchema} from "@utils/schemas/auth";
 import {useRouter} from "next/navigation";
+import {useAuth} from "@/context/AuthContext";
 
 
 const LoginSchema = z.object({
@@ -21,12 +22,22 @@ const LoginSchema = z.object({
 type LoginFormData = z.infer<typeof LoginSchema>;
 
 function LoginForm() {
+
+    const { login, user } = useAuth();
+
     const defaultValues = useState<LoginFormData>({
         email: "",
         password: "",
     })[0];
 
     const router = useRouter();
+
+    // Redirect if user is already logged in
+    useEffect(() => {
+        if (user) {
+            router.push('/profile');
+        }
+    }, [user, router]);
 
     const [formError, setFormError] = useState<string | null>(null);
 
@@ -42,32 +53,14 @@ function LoginForm() {
     const onSubmit = async (data: LoginFormData) => {
         setFormError(null);
 
-        try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+        const result = await login(data.email, data.password);
 
-            if (res.status === 401) {
-                setFormError("Incorrect email or password.");
-                return;
-            }
-
-            if (!res.ok) {
-                setFormError("An unexpected error occurred. Please try again.");
-                return;
-            }
-
-            const result = await res.json();
-            console.log(result);
-            router.push('/profile');
-        } catch (err) {
-            setFormError("Failed to connect to server. Please try again later.");
-            console.error(err);
+        if (!result.success) {
+            setFormError(result.error || "Wrong credentials");
+            return;
         }
+
+        router.push("/profile");
     };
 
 

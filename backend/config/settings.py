@@ -46,9 +46,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'authentication',  # Authentication system
     'forum',   #main forum functionalities
+    'communication', #notifications and private messaging
     # Third-party packages
     'rest_framework',  # Django REST Framework
     'rest_framework.authtoken',
+    'rest_framework_simplejwt.token_blacklist',
     'django_extensions',  # manage.py shell_plus, show_urls, runserver_plus, etc.
     'django_filters',  # Django REST Framework filters
     # ---Django REST Auth----
@@ -167,20 +169,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SITE_ID = 1
-# REST_USE_JWT = True
 # DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
 # TOKEN_MODEL = None
 
+# Update the configuration to use the correct format for dj-rest-auth 2.x
 REST_AUTH = {
     'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'jwt-auth',
+    'JWT_AUTH_HTTPONLY':False
 }
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
+    "BLACKLIST_AFTER_ROTATION": True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
@@ -219,3 +221,13 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],#django_filters
 
 }
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }

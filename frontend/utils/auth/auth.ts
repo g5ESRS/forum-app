@@ -1,3 +1,5 @@
+'use server'
+
 import { cookies } from 'next/headers';
 import {BaseUser} from "@utils/types/user";
 
@@ -8,14 +10,12 @@ export async function setAuthCookies(access: string, refresh: string, user: Base
         secure: true,
         sameSite: 'strict',
         path: '/',
-        maxAge: 900,
     });
     cookieStore.set('refresh_token', refresh, {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
         path: '/',
-        maxAge: 7 * 24 * 60 * 60,
     });
     cookieStore.set('user', JSON.stringify(user))
 }
@@ -38,6 +38,17 @@ export async function getRefreshToken() {
     return cookieStore.get('refresh_token')?.value || null;
 }
 
+export async function setRefreshToken(token: string) {
+    const cookieStore: any = await cookies();
+
+    cookieStore.set('refresh_token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        path: '/',
+    });
+}
+
 export async function setAccessToken(token: string) {
     const cookieStore: any = await cookies();
 
@@ -46,7 +57,6 @@ export async function setAccessToken(token: string) {
         secure: true,
         sameSite: 'strict',
         path: '/',
-        maxAge: 900,
     });
 }
 

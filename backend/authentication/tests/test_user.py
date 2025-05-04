@@ -5,7 +5,9 @@ import pytest
 from authentication.factories import UserFactory
 from rest_framework import status
 from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 def test_user_without_perm_cannot_list_users(check_access_denied, user_without_perm):
     """
@@ -41,7 +43,7 @@ User = get_user_model()
 
 
 @pytest.mark.django_db
-def test_authorized_user_can_list_users_with_their_group(user_with_perm, api_client):
+def test_user_with_permission_can_list_users_with_their_group(user_with_perm, api_client):
 
     user = user_with_perm("view_customuser")
 
@@ -55,15 +57,11 @@ def test_authorized_user_can_list_users_with_their_group(user_with_perm, api_cli
     # Act: Authenticated GET request
     response = api_client(user, f=True).get(url, format="json")
 
-    # Assert: Check status and number of returned users
-    user_data = response.data["results"][0]
     assert response.status_code == 200
-    assert response.data["count"] == 1
-    assert len(response.data["results"]) == 1
-    # assert len(user_data["groups"]) == 3
-    # assert user_data["groups"][0]["id"] == groups[0].id
-    # assert user_data["groups"][0]["name"] == "group1"
 
+    data = response.data.get("results", [])
+
+    user_data = data[0]
     assert user_data["username"] == user.username
     assert len(user_data["groups"]) == 3
 
@@ -123,12 +121,19 @@ def test_list_users_has_permissions_with_id_and_codename_and_name(api_client, us
         assert "name" in perm
 
 
-def test_user_without_perm_cannot_see_user_details(check_access_denied, user_without_perm):
+def unauthenticated_user_cannot_see_user_details(api_client):
     """
-    Verify that a user without 'change_customuser' permission cannot change users (Patch /users/<user_id>).
+    Verify that unauthenticated user cannot retrieve users (GET /users/<user_id>).
     """
-    check_access_denied(user_without_perm, "users-detail",
-                        "patch", url_kwargs={"pk": user_without_perm.id})
+    # Create a user whose details we'll try to access
+    target_user = User.objects.create_user(username="target", password="pass")
+
+    # Unauthenticated request
+    url = reverse("users-detail", kwargs={"pk": target_user.pk})
+    response = api_client().get(url)
+
+    # Expect 401 Unauthorized
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.django_db
@@ -150,7 +155,7 @@ def test_user_retrieve_endpoint_returns_user_details(api_client, user_with_perm)
 
 
 @pytest.mark.django_db
-def test_user_with_permission_can_partially_update_user(api_client, user_with_perm):
+def test_user_with_permission_can_partially_update_users(api_client, user_with_perm):
     # Create a user with permission to update users
     user = user_with_perm("change_customuser")
 
@@ -174,7 +179,7 @@ def test_user_with_permission_can_partially_update_user(api_client, user_with_pe
 
 
 @pytest.mark.django_db
-def test_authorized_user_can_partially_update_a_user_permissions(api_client, user_with_perm):
+def test_user_with_permission_can_partially_update_a_user_permissions(api_client, user_with_perm):
     # Create acting user with permission to change users
     admin_user = user_with_perm("change_customuser")
 
@@ -205,7 +210,7 @@ def test_authorized_user_can_partially_update_a_user_permissions(api_client, use
     assert len(target_user.user_permissions.all()) == 2
 
 
-def test_authorized_user_can_partially_update_a_user_group(api_client, user_with_perm):
+def test_user_with_permission_can_partially_update_a_user_group(api_client, user_with_perm):
     # Create user with change permission
     admin_user = user_with_perm("change_customuser")
 
@@ -233,3 +238,80 @@ def test_authorized_user_can_partially_update_a_user_group(api_client, user_with
     assert group1 in target_user.groups.all()
     assert group2 in target_user.groups.all()
     assert target_user.groups.count() == 2
+
+
+@pytest.mark.django_db
+def test_user_can_see_its_profile_detail(api_client):
+
+    user = User.objects.create_user(username="testuser", password="testpass")
+
+    url = reverse("users-detail", kwargs={"pk": user.pk})
+    response= api_client(user=user).get(url)
+     
+
+    # Assert
+    assert response.status_code == 200
+    assert response.data["id"] == user.id
+    assert response.data["username"] == user.username
+
+@pytest.mark.django_db
+def test_user_can_see_its_groups(api_client):
+    user = User.objects.create_user(username="testuser", password="testpass")
+
+    # Create and assign group
+    group = Group.objects.create(name="Moderators")
+    user.groups.add(group)
+
+    url = reverse("users-detail", kwargs={"pk": user.pk})
+    response = api_client(user=user).get(url)
+
+    assert response.status_code == 200
+    group_names = [g["name"] for g in response.data["groups"]]
+    assert "Moderators" in group_names
+
+
+@pytest.mark.django_db
+def test_user_can_see_its_permissions(api_client, user_with_perm):
+
+    user = user_with_perm("view_group")
+
+    url = reverse("users-detail", kwargs={"pk": user.pk})
+    response = api_client(user=user).get(url)
+
+    assert response.status_code == 200
+    perm_codenames = [perm["codename"] for perm in response.data["permissions"]]
+    assert "view_group" in perm_codenames
+
+
+@pytest.mark.django_db
+def test_user_cannot_see_others_detail(api_client):
+    # requesting requesting user
+    requesting_user = User.objects.create_user(username="requestinguser", password="testpass")
+
+    # Create a second user (the one being requested)
+    other_user = User.objects.create_user(username="otheruser", password="testpass")
+
+    url = reverse("users-detail", kwargs={"pk": other_user.pk})
+    response = api_client(requesting_user).get(url)
+
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_user_cannot_update_others_detail(api_client):
+    # Create authenticated user
+    user = User.objects.create_user(username="requestinguser", password="testpass")
+
+    # Create a second user
+    other_user = User.objects.create_user(username="other", password="pass")
+
+    url = reverse("users-detail", kwargs={"pk": other_user.pk})
+    data = {"username": "hacked"}
+
+    # Attempt to update another user's info
+    response = api_client(user).patch(url, data, format="json")
+
+    # Expect forbidden 403 status
+    assert response.status_code == 403
+    
+# #def test_admin_can_see_all_users

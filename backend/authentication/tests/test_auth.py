@@ -55,3 +55,4 @@ def test_password_reset(api_client):
     response = api_client.post(url, data, format='json')
     assert response.status_code == 200
     # Normally you'd parse the email to confirm the token, but this is enough for a basic test.
+

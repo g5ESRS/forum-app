@@ -3,7 +3,7 @@ import RegisterForm from "@/pages/auth/RegisterForm";
 
 function Registration() {
     return (
-        <div>
+        <div className={"w-full"}>
             <RegisterForm/>
         </div>
     );

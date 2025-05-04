@@ -3,7 +3,7 @@ import LoginForm from "@/pages/auth/LoginForm";
 
 function Login() {
     return (
-        <div>
+        <div className="w-full">
             <LoginForm />
         </div>
     );

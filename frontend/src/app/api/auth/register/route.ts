@@ -10,12 +10,12 @@ export async function POST(req: Request) {
     } catch {
         return new Response("Invalid JSON", {status: 400});
     }
+
     const res = await fetch(`${BACKEND_URL}/api/auth/registration/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
     });
-
     if (res.status === 400) return new Response('Bad Request', { status: 400 });
 
     if (!res.ok) {
