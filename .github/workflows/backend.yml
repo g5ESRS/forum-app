@@ -12,6 +12,8 @@ on:
       - 'chore/*'
     paths:
       - 'backend/**'
+      - 'deployment/**'
+      - '.github/**'
   pull_request:
     branches:
       - dev
