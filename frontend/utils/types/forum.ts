@@ -14,7 +14,7 @@ export interface Topic{
     content: string;
     author: number;
     category: Category;
-    tags: string[];
+    tags: any; // TODO: Change to Tag[]
     pinned: boolean;
     closed: boolean;
     views: number;

@@ -23,7 +23,7 @@ async function MainPage() {
 
         if (!(category && topics)) {
             return (
-                <div> Loading... </div>
+                <div> </div>
             )
         }
     }catch {
