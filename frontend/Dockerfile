@@ -40,4 +40,4 @@ EXPOSE 3000
 RUN npm prune --production
 
 # Start the Next.js app
-CMD ["npm", "start"]
+CMD ["npm", "dev"]
