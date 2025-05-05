@@ -42,7 +42,6 @@ export async function POST(request: Request) {
 
     const { access, refresh, user } = result
     try {
-        console.log('Setting auth cookies:', { access, refresh, user })
         await setAuthCookies(access, refresh, user)
     } catch (err) {
         console.error('Failed to set cookies:', err)
