@@ -11,6 +11,7 @@ export async function fetchWithAuth(
     const cookieStore = await cookies()
     const access = cookieStore.get('access_token')?.value
     if (!access) {
+        console.error('No access token found')
         return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
@@ -26,6 +27,7 @@ export async function fetchWithAuth(
     if (res.status === 401 && retry < 1) {
         const refresh = cookieStore.get('refresh_token')?.value
         if (!refresh) {
+            console.error('No refresh token found')
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
         }
         const refreshRes = await fetch(`${BACKEND_URL}/api/auth/token/refresh/`, {
@@ -34,6 +36,7 @@ export async function fetchWithAuth(
             body: JSON.stringify({ refresh }),
         })
         if (!refreshRes.ok) {
+            console.error('Failed to refresh token:', await refreshRes.text())
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
         }
         const { access: newA, refresh: newR } = await refreshRes.json()
@@ -43,6 +46,7 @@ export async function fetchWithAuth(
     }
 
     if (!res.ok) {
+        console.error('Backend error:', await res.text())
         return NextResponse.json({ error: 'Backend error' }, { status: res.status })
     }
 

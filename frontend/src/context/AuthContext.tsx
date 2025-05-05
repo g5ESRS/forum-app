@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             })
             setUser(null)
         } catch {
-            // игнорируем ошибку логаута
+
         }
     }
 
