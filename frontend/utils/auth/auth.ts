@@ -6,16 +6,10 @@ import {BaseUser} from "@utils/types/user";
 export async function setAuthCookies(access: string, refresh: string, user: BaseUser) {
     const cookieStore: any = await cookies();
     cookieStore.set('access_token', access, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
     });
     cookieStore.set('refresh_token', refresh, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
     });
