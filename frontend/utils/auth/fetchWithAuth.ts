@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { BACKEND_URL } from '@utils/constants'
+import {setAuthCookies} from "@utils/auth/auth";
 
 export async function fetchWithAuth(
     path: string,
@@ -24,7 +25,6 @@ export async function fetchWithAuth(
         },
     })
 
-    // при истёкшем токене пробуем обновить
     if (res.status === 401 && retry < 1) {
         const refresh = cookieStore.get('refresh_token')?.value
         if (!refresh) {
@@ -41,8 +41,7 @@ export async function fetchWithAuth(
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
         }
         const { access: newA, refresh: newR } = await refreshRes.json()
-        cookieStore.set('access_token', newA, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' })
-        cookieStore.set('refresh_token', newR, { httpOnly: true, secure: true, sameSite: 'strict', path: '/' })
+        setAuthCookies(newA, newR, { access: newA, refresh: newR })
         return fetchWithAuth(path, init, retry + 1)
     }
 

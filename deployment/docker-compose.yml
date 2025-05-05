@@ -15,6 +15,9 @@ services:
     depends_on:
       - db
       - redis
+    environment:
+        DJANGO_ALLOWED_HOSTS: "54.242.180.95 web"
+
     env_file:
       - ./../backend/.env.dev
 

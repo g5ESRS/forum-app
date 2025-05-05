@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers';
 import {BaseUser} from "@utils/types/user";
 
-export async function setAuthCookies(access: string, refresh: string, user: BaseUser) {
+export async function setAuthCookies(access: string, refresh: string, user: BaseUser|{} = {}): Promise<void> {
     const cookieStore: any = await cookies();
     cookieStore.set('access_token', access, {
         path: '/',
@@ -13,7 +13,6 @@ export async function setAuthCookies(access: string, refresh: string, user: Base
         path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
     });
-    cookieStore.set('user', JSON.stringify(user))
 }
 
 export async function getAccessToken() {
