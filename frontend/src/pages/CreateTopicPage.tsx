@@ -81,7 +81,7 @@ function CreateTopicPage({categoryId}: CreateTopicPageProps) {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const categories = await fetch(`${BASE_URL}/api/forum/categories`, {
+            const categories = await fetch(`/api/forum/categories`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
