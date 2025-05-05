@@ -36,11 +36,13 @@ export async function POST(request: Request) {
     try {
         result = await res.json()
     } catch {
+        console.error('Failed to parse backend response:', await res.text())
         return NextResponse.json({ error: 'Invalid backend response' }, { status: 502 })
     }
 
     const { access, refresh, user } = result
     try {
+        console.log('Setting auth cookies:', { access, refresh, user })
         await setAuthCookies(access, refresh, user)
     } catch (err) {
         console.error('Failed to set cookies:', err)
