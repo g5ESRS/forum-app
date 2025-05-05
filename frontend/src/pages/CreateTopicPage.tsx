@@ -8,7 +8,6 @@ import {Controller, useForm} from "react-hook-form";
 import FormContainer from "@/components/FormContainer";
 import FieldContainer from "@/components/FieldContainer";
 import Input from "@/components/Input";
-import {BASE_URL} from "@utils/constants";
 import {Category} from "@utils/types/forum";
 import DropDownSelect from "@/components/DropDownSelect";
 import Button from "@/components/Button";
@@ -60,7 +59,7 @@ function CreateTopicPage({categoryId}: CreateTopicPageProps) {
     const onSubmit = async (data: TopicCreateSchemaType) => {
         setError(null);
 
-        const response = await fetch(`${BASE_URL}/api/forum/topics/create`, {
+        const response = await fetch(`/api/forum/topics/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
