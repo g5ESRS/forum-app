@@ -25,13 +25,6 @@ export async function getAccessToken() {
 
     return cookieStore.get('access_token')?.value || null;
 }
-
-export async function getUser() {
-    const cookieStore: any = await cookies();
-
-    return cookieStore.get('user')?.value || null;
-}
-
 export async function getRefreshToken() {
     const cookieStore: any = await cookies();
 

@@ -71,11 +71,7 @@ function CreateTopicPage({categoryId}: CreateTopicPageProps) {
             return;
         }
 
-        const responseData = await response.json();
-        if (response.status !== 201) {
-            setError('Error in creating topic, try again later');
-            return;
-        }
+        const responseData = await response.json()
 
         router.push(`/topics/${responseData.id}`);
     }
