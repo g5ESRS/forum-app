@@ -1,56 +1,55 @@
-import {BASE_URL} from "@utils/constants";
-import {getAccessToken, getRefreshToken, setAccessToken, setRefreshToken} from "@utils/auth/auth";
-import {NextResponse} from "next/server";
+'use server';
 
-export async function fetchWithAuth(path: string, init: RequestInit = {}, count:number = 0) {
-    const res = await fetch(path, {
+import { cookies } from 'next/headers'
+import { NextResponse } from 'next/server'
+import { BACKEND_URL } from '@utils/constants'
+import {setAuthCookies} from "@utils/auth/auth";
+
+export async function fetchWithAuth(
+    path: string,
+    init: RequestInit = {},
+    retry = 0,
+) {
+    const cookieStore = await cookies()
+    const access = cookieStore.get('access_token')?.value
+    if (!access) {
+        console.error('No access token found')
+        return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    }
+
+    let res = await fetch(`${BACKEND_URL}${path}`, {
         ...init,
-        credentials: 'include',
         headers: {
-            ...init.headers,
-            "Authorization": `Bearer ${await getAccessToken()}`,
+            ...init.headers as Record<string, string>,
+            Authorization: `Bearer ${access}`,
         },
-        cache: 'no-store',
-    });
+    })
 
+    if (res.status === 401 && retry < 1) {
+        const refresh = cookieStore.get('refresh_token')?.value
+        if (!refresh) {
+            console.error('No refresh token found')
+            return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+        }
+        const refreshRes = await fetch(`${BACKEND_URL}/api/auth/token/refresh/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh }),
+        })
+        if (!refreshRes.ok) {
+            console.error('Failed to refresh token:', await refreshRes.text())
+            return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+        }
+        const { access: newA, refresh: newR } = await refreshRes.json()
+        setAuthCookies(newA, newR, { access: newA, refresh: newR })
+        return fetchWithAuth(path, init, retry + 1)
+    }
 
     if (!res.ok) {
-        if (await getRefreshToken() == null) {
-            return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-        }
-
-        const refreshToken = await getRefreshToken();
-
-        const refreshRes = await fetch(`${BASE_URL}/api/auth/refresh/`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            cache: 'no-store',
-            body: JSON.stringify({'refresh': refreshToken}),
-        });
-        if (!refreshRes.ok) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-
-        const refreshData = await refreshRes.json();
-        if (!refreshData) {
-            return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-        }
-
-        await setAccessToken(refreshData.access);
-        await setRefreshToken(refreshData.refresh);
-
-        if (count > 4) {
-            return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-        }
-        return fetchWithAuth(path, init, count + 1);
+        console.error('Backend error:', await res.text())
+        return NextResponse.json({ error: 'Backend error' }, { status: res.status })
     }
 
-    let data = await res.json();
-
-    if (!data) {
-        return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(data, { status: 200 });
+    const data = await res.json()
+    return NextResponse.json(data, { status: 200 })
 }

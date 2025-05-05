@@ -2,7 +2,6 @@ import React from 'react';
 import ForumCategoryList from "@/components/ForumCategoryList";
 import ForumTopicList from "@/components/ForumTopicList";
 import {BASE_URL} from "@utils/constants";
-import NotFound from "next/dist/client/components/not-found-error";
 
 
 async function MainPage() {
@@ -27,7 +26,8 @@ async function MainPage() {
             )
         }
     }catch {
-        return <NotFound/>
+        category = [];
+        topics = [];
     }
 
     return (

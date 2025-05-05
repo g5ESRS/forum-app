@@ -3,33 +3,22 @@
 import { cookies } from 'next/headers';
 import {BaseUser} from "@utils/types/user";
 
-export async function setAuthCookies(access: string, refresh: string, user: BaseUser) {
+export async function setAuthCookies(access: string, refresh: string, user: BaseUser|{} = {}): Promise<void> {
     const cookieStore: any = await cookies();
     cookieStore.set('access_token', access, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
     });
     cookieStore.set('refresh_token', refresh, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
     });
-    cookieStore.set('user', JSON.stringify(user))
 }
 
 export async function getAccessToken() {
     const cookieStore: any = await cookies();
 
     return cookieStore.get('access_token')?.value || null;
-}
-
-export async function getUser() {
-    const cookieStore: any = await cookies();
-
-    return cookieStore.get('user')?.value || null;
 }
 
 export async function getRefreshToken() {
@@ -42,10 +31,8 @@ export async function setRefreshToken(token: string) {
     const cookieStore: any = await cookies();
 
     cookieStore.set('refresh_token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
+
     });
 }
 
@@ -53,9 +40,6 @@ export async function setAccessToken(token: string) {
     const cookieStore: any = await cookies();
 
     cookieStore.set('access_token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
     });
 }

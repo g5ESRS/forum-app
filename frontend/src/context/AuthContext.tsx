@@ -2,14 +2,12 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { fetchWithAuth } from "@utils/auth/fetchWithAuth";
-import { BASE_URL } from "@utils/constants";
-import { BaseUser } from "@utils/types/user";
+import { BaseUser } from '@utils/types/user'
 
 type AuthContextType = {
     user: BaseUser | null
     loading: boolean
-    login: (email: string, password: string) => Promise<{ success: boolean, error?: string }>
+    login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
     logout: () => Promise<void>
     refreshUser: () => Promise<void>
 }
@@ -19,7 +17,7 @@ const AuthContext = createContext<AuthContextType>({
     loading: true,
     login: async () => ({ success: false }),
     logout: async () => {},
-    refreshUser: async () => {}
+    refreshUser: async () => {},
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -28,16 +26,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refreshUser = async () => {
         try {
-            const response = await fetchWithAuth(`${BASE_URL}/api/auth/user`)
-
-            if (response.status === 200) {
-                setUser(await response.json())
+            const res = await fetch('/api/auth/user', {
+                method: 'GET',
+                credentials: 'include',
+            })
+            if (res.ok) {
+                setUser(await res.json())
             } else {
-                console.error(`Auth failed with status: ${response.status}`)
                 setUser(null)
             }
-        } catch (error) {
-            console.error("Failed to fetch user data:", error)
+        } catch {
             setUser(null)
         } finally {
             setLoading(false)
@@ -52,34 +50,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
-            });
+            })
 
             if (res.status === 401) {
-                return { success: false, error: "Incorrect email or password." };
+                return { success: false, error: 'Неверный email или пароль.' }
             }
-
             if (!res.ok) {
-                return { success: false, error: "An unexpected error occurred. Please try again." };
+                return { success: false, error: 'Произошла ошибка. Попробуйте ещё раз.' }
             }
 
-            await refreshUser();
-            return { success: true };
-        } catch (err) {
-            console.error(err);
-            return { success: false, error: "Failed to connect to server. Please try again later." };
+            await refreshUser()
+            return { success: true }
+        } catch {
+            return { success: false, error: 'Сервер недоступен. Попробуйте позже.' }
         }
     }
 
     const logout = async () => {
         try {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            setUser(null);
-        } catch (err) {
-            console.error('Failed to logout:', err);
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+            })
+            setUser(null)
+        } catch {
+
         }
     }
 

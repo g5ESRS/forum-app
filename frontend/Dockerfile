@@ -3,6 +3,9 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# Set the environment variable directly
+ENV NEXT_PUBLIC_BACKEND_URL=http://web:8000
+
 # Copy only package.json and lock first for caching
 COPY package.json package-lock.json ./
 
