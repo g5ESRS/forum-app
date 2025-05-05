@@ -6,7 +6,7 @@ import { BACKEND_URL } from '@utils/constants'
 export async function fetchWithAuth(
     path: string,
     init: RequestInit = {},
-    retry = 0
+    retry = 0,
 ) {
     const cookieStore = await cookies()
     const access = cookieStore.get('access_token')?.value
