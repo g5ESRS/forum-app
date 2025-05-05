@@ -7,6 +7,8 @@ async function CategoryListPage() {
     let categories;
 
     try {
+        console.log("Fetching categories from backend");
+        console.log(`${BASE_URL}/api/forum/categories`);
         const responseCategories = await fetch(`${BASE_URL}/api/forum/categories`, {
             next: { revalidate: 10 },
         });
