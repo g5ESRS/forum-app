@@ -12,6 +12,8 @@ on:
       - 'chore/*'
     paths:
       - 'backend/**'
+      - 'deployment/**'
+      - '.github/**'
   pull_request:
     branches:
       - dev
@@ -115,7 +117,7 @@ jobs:
     defaults:
       run:
         working-directory: backend
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/chore/deploy-3-container-orchestration'
     environment:
       name: production
     steps:
@@ -138,18 +140,19 @@ jobs:
             # Pull the latest code from GitHub
 
             # If the project is not cloned, clone it
-            if [ ! -d "g5-esrs-forum/.git" ]; then
-              git clone git@github.com:erfanghoreishi/g5-esrs-forum.git
+            if [ ! -d "forum-app/.git" ]; then
+              git clone https://github.com/g5ESRS/forum-app.git
             fi
 
             # Navigate to project directory
-            cd g5-esrs-forum
+            cd forum-app
 
             # Pull the latest code
             git reset --hard
-            git checkout main
-            git pull origin main
+            git checkout chore/deploy-3-container-orchestration
+            git pull origin chore/deploy-3-container-orchestration
 
             # Ensure Docker Compose is up-to-date
+            cd deployment  # Navigate to the directory containing docker-compose.yml
             docker-compose pull
             docker-compose up -d --remove-orphans
