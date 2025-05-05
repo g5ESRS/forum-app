@@ -1,4 +1,5 @@
-'use server'
+'use server';
+
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { BACKEND_URL } from '@utils/constants'

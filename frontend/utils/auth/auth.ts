@@ -10,12 +10,14 @@ export async function setAuthCookies(access: string, refresh: string, user: Base
         secure: true,
         sameSite: 'strict',
         path: '/',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
     });
     cookieStore.set('refresh_token', refresh, {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',
         path: '/',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
     });
     cookieStore.set('user', JSON.stringify(user))
 }
@@ -25,6 +27,7 @@ export async function getAccessToken() {
 
     return cookieStore.get('access_token')?.value || null;
 }
+
 export async function getRefreshToken() {
     const cookieStore: any = await cookies();
 
@@ -39,6 +42,7 @@ export async function setRefreshToken(token: string) {
         secure: true,
         sameSite: 'strict',
         path: '/',
+
     });
 }
 
