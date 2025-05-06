@@ -1,4 +1,5 @@
 import {BACKEND_URL} from "@utils/constants";
+import {handleErrorResponse} from "@utils/handleErrorResponse";
 
 
 export async function POST(req: Request) {
@@ -18,8 +19,7 @@ export async function POST(req: Request) {
     if (res.status === 401) return new Response('Unauthorized', { status: 401 });
 
     if (!res.ok) {
-        console.error("Backend error:", await res.text());
-        return new Response("Server error", { status: 502 });
+        return handleErrorResponse(res, await res.json());
     }
 
     try {

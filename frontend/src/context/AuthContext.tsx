@@ -54,18 +54,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             })
-
-            if (res.status === 401) {
-                return { success: false, error: 'Неверный email или пароль.' }
-            }
             if (!res.ok) {
-                return { success: false, error: 'Произошла ошибка. Попробуйте ещё раз.' }
+                return { success: false, error: (await res.json()).error }
             }
 
             await refreshUser()
             return { success: true }
         } catch {
-            return { success: false, error: 'Сервер недоступен. Попробуйте позже.' }
+            return { success: false, error: 'Server error, please try later' }
         }
     }
 

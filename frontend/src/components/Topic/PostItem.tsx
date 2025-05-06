@@ -7,14 +7,6 @@ interface PostItemProps {
 }
 
 async function PostItem({post}: PostItemProps) {
-    // const user = await fetch(`${BASE_URL}/api/auth/user/${post.id}`)
-    //
-    // if (!user.ok) {
-    //     console.error("Failed to fetch user data:", await user.text());
-    //     return null;
-    // }
-    //
-    // const userData = await user.json();
 
     return (
         <div className="p-4 bg-background-muted rounded-xl border border-border text-foreground">

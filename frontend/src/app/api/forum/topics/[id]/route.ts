@@ -1,4 +1,5 @@
 import {BACKEND_URL} from "@utils/constants";
+import {handleErrorResponse} from "@utils/handleErrorResponse";
 
 export async function GET(
     request: Request,
@@ -12,8 +13,7 @@ export async function GET(
     });
 
     if (!res.ok) {
-        console.error("Backend error:", await res.text());
-        return new Response("Server error", { status: 502 });
+        return handleErrorResponse(res, await res.json());
     }
 
     let topic;

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { BACKEND_URL } from '@utils/constants'
 import { setAuthCookies } from '@utils/auth/auth'
 import { BaseUser } from '@utils/types/user'
+import {handleErrorResponse} from "@utils/handleErrorResponse";
 
 interface LoginResponse {
     access: string
@@ -24,27 +25,28 @@ export async function POST(request: Request) {
         body: JSON.stringify(body),
     })
 
-    if (res.status === 401) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
     if (!res.ok) {
-        console.error('Backend error:', await res.text())
-        return NextResponse.json({ error: 'Server error' }, { status: 502 })
+        let errorResponse: unknown;
+        try {
+            errorResponse = await res.json();
+        } catch {
+            return NextResponse.json({ error: 'Invalid backend response' }, { status: 502 });
+        }
+
+        return handleErrorResponse(res, errorResponse);
     }
 
     let result: LoginResponse
     try {
         result = await res.json()
     } catch {
-        console.error('Failed to parse backend response:', await res.text())
         return NextResponse.json({ error: 'Invalid backend response' }, { status: 502 })
     }
 
     const { access, refresh, user } = result
     try {
         await setAuthCookies(access, refresh, user)
-    } catch (err) {
-        console.error('Failed to set cookies:', err)
+    } catch  {
         return NextResponse.json({ error: 'Failed to set authentication cookies' }, { status: 500 })
     }
 

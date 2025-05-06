@@ -8,7 +8,6 @@ export async function GET(){
     });
 
     if (!res.ok) {
-        console.error("Backend error:", await res.text());
         return new Response("Server error", { status: 502 });
     }
 

@@ -18,7 +18,6 @@ async function Page({params}: CategeryTopicsPageProps) {
     const category = await response.json();
 
     return (
-        // TODO: check .topics later
         <CategoryTopicsPage topics={category.topics} categoryId={id}/>
     );
 }
