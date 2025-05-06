@@ -69,13 +69,13 @@ function AdminUserTable() {
             <div className={'flex items-center w-full max-w-2xl'}>
                 <Link
                     href={'/admin/categories'}>
-                    <button className={'bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'}>
+                    <button className={'bg-primary-active text-white px-4 py-2 rounded-md hover:bg-blue-600'}>
                         Categories
                     </button>
                 </Link>
                 <Link
                     href={'/admin/groups'}>
-                    <button className={'bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4'}>
+                    <button className={'bg-primary-active text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4'}>
                         Groups
                     </button>
                 </Link>

@@ -69,7 +69,7 @@ function AdminGroupTable() {
         <div className={'flex flex-col items-center min-h-screen bg-background p-6 w-full'}>
             <h1 className="text-2xl font-semibold text-foreground mb-6">Groups</h1>
 
-            <Link href={`/admin/group/create`} className="mb-4">
+            <Link href={`/admin/groups/create`} className="mb-4">
 
                 <button className="bg-blue-500 text-white px-4 py-2 rounded">
                     Create new group
