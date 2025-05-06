@@ -1,11 +1,10 @@
+import {Permission} from "@utils/types/user";
 import {fetchWithAuth} from "@utils/auth/fetchWithAuth";
 import {NextResponse} from "next/server";
-import {UserDetails} from "@utils/types/user";
 
-
-async function fetchAllUsers(): Promise<UserDetails[]> {
-    let url = '/api/auth/users/';
-    let allUsers: UserDetails[] = [];
+async function fetchAllPermissions(): Promise<Permission[]> {
+    let url = '/api/auth/permissions/';
+    let allPermissions: Permission[] = [];
 
     while (url) {
         const res = await fetchWithAuth(url);
@@ -15,7 +14,7 @@ async function fetchAllUsers(): Promise<UserDetails[]> {
         }
 
         const data = await res.json();
-        allUsers = [...allUsers, ...data.results];
+        allPermissions = [...allPermissions, ...data.results];
 
         if (data.next) {
             const nextUrl = new URL(data.next);
@@ -25,14 +24,14 @@ async function fetchAllUsers(): Promise<UserDetails[]> {
         }
     }
 
-    return allUsers;
+    return allPermissions;
 }
 
 export async function GET() {
     try {
-        const allUsers = await fetchAllUsers();
+        const allPermissions = await fetchAllPermissions();
 
-        return NextResponse.json(allUsers, {
+        return NextResponse.json(allPermissions, {
             status: 200,
             headers: {
                 'Content-Type': 'application/json'

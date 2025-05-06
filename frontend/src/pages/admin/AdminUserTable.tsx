@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+
 'use client';
 
 import React from 'react';
 import {fuzzySort} from "@/components/table/FuzzyFilterSort";
 import {ColumnDef} from "@tanstack/react-table";
-import {BaseUser} from "@utils/types/user";
+import {BaseUser, UserDetails} from "@utils/types/user";
 import FuzzyTable from "@/components/table/FuzzyTable";
+import Link from "next/link";
 
 function AdminUserTable() {
     const columns = React.useMemo<ColumnDef<BaseUser, any>[]>(
@@ -40,12 +44,18 @@ function AdminUserTable() {
     const [users, setUsers] = React.useState<BaseUser[]>([]);
 
     React.useEffect(() => {
-        const fetchUsers = async () => {
-            const response = await fetch('/api/admin/users');
+        const fetchUsers = async ():Promise<undefined> => {
+            const response = await fetch('/api/admin/users',{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            const data = await response.json();
+            const data:UserDetails[] = await response.json();
             console.log(data);
             setUsers(data);
         }
@@ -55,6 +65,22 @@ function AdminUserTable() {
 
     return (
         <div className={'flex flex-col justify-center items-center'}>
+            <h1 className={'text-2xl font-semibold text-foreground mb-6'}>Users</h1>
+            <div className={'flex items-center w-full max-w-2xl'}>
+                <Link
+                    href={'/admin/categories'}>
+                    <button className={'bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600'}>
+                        Categories
+                    </button>
+                </Link>
+                <Link
+                    href={'/admin/groups'}>
+                    <button className={'bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4'}>
+                        Groups
+                    </button>
+                </Link>
+
+            </div>
             {FuzzyTable<BaseUser>({
                 columns: columns,
                 data: users,

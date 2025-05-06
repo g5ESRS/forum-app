@@ -6,7 +6,7 @@ export interface BaseUser {
 
 export interface UserDetails extends BaseUser {
     groups: Group[];
-    user_permissions: Permission[];
+    user_permissions: number[];
     permissions: Permission[];
 }
 
@@ -20,5 +20,5 @@ export interface Permission {
 export interface Group {
     id: number;
     name: string;
-    permissions: Permission[];
+    permissions: number[];
 }

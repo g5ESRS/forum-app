@@ -4,10 +4,10 @@ import React, {useEffect, useState} from 'react';
 import {UserDetails} from "@utils/types/user";
 import AdminUser from "@/pages/admin/AdminUser";
 
+export const dynamic = 'force-dynamic';
+
 interface UserIdPageProps {
-    params: {
-        id: string;
-    };
+    params: Promise<{id: string}>;
 }
 
 function UserIdPage({params}: UserIdPageProps) {
@@ -19,9 +19,14 @@ function UserIdPage({params}: UserIdPageProps) {
     useEffect(() => {
         const fetchUserDetails = async () =>{
             try {
-                console.log("Starting")
-
-                const res = await fetch(`/api/auth/user/${id}`);
+                const res = await fetch(`/api/auth/user/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    cache: 'no-store',
+                });
 
                 let data = await res.json();
 
@@ -36,14 +41,12 @@ function UserIdPage({params}: UserIdPageProps) {
         }
 
         fetchUserDetails();
-    }, []);
+    }, [id]);
 
     if (!user) return <div>Loading...</div>;
 
     return (
-        <div>
             <AdminUser user={user}/>
-        </div>
     );
 }
 
