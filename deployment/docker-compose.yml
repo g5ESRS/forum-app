@@ -16,7 +16,7 @@ services:
       - db
       - redis
     environment:
-      DJANGO_ALLOWED_HOSTS: "54.242.180.95 web"
+      DJANGO_ALLOWED_HOSTS: "54.242.180.95 web localhost"
     env_file:
       - ./../backend/.env.dev
 
@@ -56,7 +56,8 @@ services:
       - web
     environment:
       NEXT_PUBLIC_BACKEND_URL: http://web:8000
-      NEXT_PUBLIC_SITE_URL: http://54.242.180.95:3000
+#    env_file:
+#      - ./../frontend/.env.docker
 
   redis:
     image: redis:7

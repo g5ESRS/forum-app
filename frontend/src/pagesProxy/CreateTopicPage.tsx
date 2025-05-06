@@ -66,7 +66,7 @@ function CreateTopicPage({categoryId}: CreateTopicPageProps) {
         });
 
         if (!response.ok) {
-            setError('Error in creating topic, try again later');
+            setError(`${(await response.json()).error}`);
             return;
         }
 

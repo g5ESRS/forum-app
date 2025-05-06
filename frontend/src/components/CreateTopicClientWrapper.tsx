@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { useSearchParams } from 'next/navigation'
-import CreateTopicPage from '@/pages/CreateTopicPage'
+import CreateTopicPage from '@/pagesProxy/CreateTopicPage'
 
 export default function CreateTopicClientWrapper() {
     const searchParams = useSearchParams()

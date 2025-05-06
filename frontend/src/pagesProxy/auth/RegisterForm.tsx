@@ -75,8 +75,8 @@ function RegisterForm() {
                 body: JSON.stringify(data),
             });
 
-            if (res.status === 401) {
-                setFormError("Incorrect username, email or password.");
+            if (!res.ok) {
+                setFormError(`${(await res.json()).error}`);
                 return;
             }
 
@@ -86,11 +86,10 @@ function RegisterForm() {
                 return;
             }
 
-            // After successful registration, log the user in
             const loginResult = await login(data.email, data.password1);
 
             if (!loginResult.success) {
-                setFormError("Registration successful, but failed to log in automatically. Please login manually.");
+                setFormError(`${loginResult.error}`);
                 router.push('/auth/login');
                 return;
             }
@@ -99,9 +98,8 @@ function RegisterForm() {
             await refreshUser();
             router.push('/profile');
 
-        } catch (err) {
+        } catch  {
             setFormError("Failed to connect to server. Please try again later.");
-            console.error(err);
         }
     }
 

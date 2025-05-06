@@ -31,9 +31,6 @@ export async function setRefreshToken(token: string) {
     const cookieStore: any = await cookies();
 
     cookieStore.set('refresh_token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
 
     });
@@ -43,9 +40,6 @@ export async function setAccessToken(token: string) {
     const cookieStore: any = await cookies();
 
     cookieStore.set('access_token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
         path: '/',
     });
 }

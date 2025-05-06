@@ -1,4 +1,4 @@
-import MainPage from "@/pages/MainPage";
+import MainPage from "@/pagesProxy/MainPage";
 
 export default function Home() {
   return (

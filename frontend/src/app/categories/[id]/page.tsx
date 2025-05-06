@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryTopicsPage from "@/pages/CategoryTopicsPage";
+import CategoryTopicsPage from "@/pagesProxy/CategoryTopicsPage";
 import {BASE_URL} from "@utils/constants";
 
 interface CategeryTopicsPageProps {
@@ -18,7 +18,6 @@ async function Page({params}: CategeryTopicsPageProps) {
     const category = await response.json();
 
     return (
-        // TODO: check .topics later
         <CategoryTopicsPage topics={category.topics} categoryId={id}/>
     );
 }
