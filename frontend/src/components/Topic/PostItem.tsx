@@ -1,6 +1,5 @@
 import React from 'react';
 import {Post} from "@utils/types/forum";
-// import {BASE_URL} from "@utils/constants";
 
 interface PostItemProps {
     post: Post;
@@ -9,7 +8,7 @@ interface PostItemProps {
 async function PostItem({post}: PostItemProps) {
 
     return (
-        <div className="p-4 bg-background-muted rounded-xl border border-border text-foreground">
+        <div className="p-4 bg-background-muted rounded-xl border border-border text-foreground break-all">
             <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-foreground">
                     {post.author}

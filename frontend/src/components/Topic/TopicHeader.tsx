@@ -9,7 +9,7 @@ function TopicHeader({topic} : TopicHeaderProps) {
     const {title, category, views, pinned, closed} = topic;
 
     return (
-        <div className="mb-2 flex flex-wrap justify-between items-start gap-2">
+        <div className="mb-2 flex flex-wrap justify-between items-start gap-2 break-all">
             <div>
                 <h1 className="text-2xl font-bold text-foreground">{title}</h1>
                 <p className="text-sm text-foreground-muted">

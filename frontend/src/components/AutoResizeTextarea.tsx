@@ -26,7 +26,7 @@ function AutoResizeTextarea({ value, onChange, placeholder }: AutoResizeTextarea
             value={value}
             placeholder={placeholder}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full resize-none overflow-hidden p-2 border rounded"
+            className="w-full resize-none overflow-hidden p-2 border rounded h-2"
             rows={1} // starts small
         />
     );

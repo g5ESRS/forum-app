@@ -6,7 +6,7 @@ interface TopicContentProps {
 
 function TopicContent({content}: TopicContentProps) {
     return (
-        <div className="text-foreground mt-4 whitespace-pre-wrap">{content}</div>
+        <div className="text-foreground mt-4 whitespace-pre-wrap break-all">{content}</div>
     );
 }
 
