@@ -40,11 +40,9 @@ function ForgotPasswordFormEmail() {
             body: JSON.stringify({ email: data.email }),
         });
 
-        if (res.status !== 200) {
-            console.error("Bad Request");
+        if (!res.ok) {
             return;
         }
-        console.log("Email sent successfully");
         router.push("/auth/forgot-password/success");
     }
 

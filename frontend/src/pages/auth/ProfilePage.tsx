@@ -11,22 +11,18 @@ export default function ProfilePage() {
 
     const { user, loading, logout } = useAuth();
 
-    // Redirect once we know there's no user
     useEffect(() => {
-        if (loading) return; // Don't redirect while loading
+        if (loading) return;
 
         if (!user) {
-            console.error('User not found, redirecting to login');
             router.push(LoginLinkFactory());
         }
     }, [user, router, loading]);
 
-    // While auth status is loading *or* we've kicked off the redirect, don't render the profile UI
     if (loading || !user) {
         return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
     }
 
-    // At this point we know `user` is defined
     const { username, email } = user;
 
     const handleLogout = async () => {

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import {useRouter} from "next/navigation";
-import Input from "@/components/Input";
 import {useAuth} from "@/context/AuthContext";
+import AutoResizeTextarea from "@/components/AutoResizeTextarea";
 
 interface TopicAddPostProps {
     topicId: number;
@@ -59,12 +59,10 @@ function TopicAddPost(
     return (
         <div className="bg-white rounded-xl shadow border border-border p-4">
             <h3 className="text-md font-semibold text-foreground mb-2">Add a Reply</h3>
-            <Input
-                type="text"
+            <AutoResizeTextarea
                 placeholder="Write your reply..."
                 value={newPostContent}
-                onChange={(e) => setNewPostContent(e.target.value)}
-                className="mb-2"
+                onChange={setNewPostContent}
             />
             <div className={"flex justify-end w-full"}>
                 <button

@@ -8,7 +8,6 @@ import {Controller, useForm} from "react-hook-form";
 import FormContainer from "@/components/FormContainer";
 import FieldContainer from "@/components/FieldContainer";
 import Input from "@/components/Input";
-import {BASE_URL} from "@utils/constants";
 import {Category} from "@utils/types/forum";
 import DropDownSelect from "@/components/DropDownSelect";
 import Button from "@/components/Button";
@@ -60,22 +59,18 @@ function CreateTopicPage({categoryId}: CreateTopicPageProps) {
     const onSubmit = async (data: TopicCreateSchemaType) => {
         setError(null);
 
-        const response = await fetch(`${BASE_URL}/api/forum/topics/create`, {
+        const response = await fetch(`/api/forum/topics/create`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
         });
 
         if (!response.ok) {
-            setError('Error in creating topic, try again later');
+            setError(`${(await response.json()).error}`);
             return;
         }
 
-        const responseData = await response.json();
-        if (response.status !== 201) {
-            setError('Error in creating topic, try again later');
-            return;
-        }
+        const responseData = await response.json()
 
         router.push(`/topics/${responseData.id}`);
     }
@@ -85,7 +80,7 @@ function CreateTopicPage({categoryId}: CreateTopicPageProps) {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const categories = await fetch(`${BASE_URL}/api/forum/categories`, {
+            const categories = await fetch(`/api/forum/categories`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });

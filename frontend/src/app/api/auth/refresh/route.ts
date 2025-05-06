@@ -1,4 +1,5 @@
 import {BACKEND_URL} from "@utils/constants";
+import {handleErrorResponse} from "@utils/handleErrorResponse";
 
 export async function POST(req: Request) {
     const reqbody = await req.json();
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({ refresh: refreshToken }),
     });
 
-    if (!res.ok) return new Response('Refresh failed', { status: 401 });
+    if (!res.ok) return handleErrorResponse(res, await res.json());
 
     const tokens = await res.json();
 
