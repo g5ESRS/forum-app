@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroTextPage from "@/pages/auth/HeroTextPage";
+import HeroTextPage from "@/pagesProxy/auth/HeroTextPage";
 import Button from "@/components/Button";
 import Link from "next/link";
 

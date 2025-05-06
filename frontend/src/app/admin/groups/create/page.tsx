@@ -106,7 +106,7 @@ function Page() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50' : ''}`}
+                        className={`mt-4 px-4 py-2 bg-primary-active text-white rounded`}
                     >
                         {loading ? 'Creating...' : 'Create Group'}
                     </button>

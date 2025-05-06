@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {UserDetails} from "@utils/types/user";
-import AdminUser from "@/pages/admin/AdminUser";
+import AdminUser from "@/pagesProxy/admin/AdminUser";
 
 export const dynamic = 'force-dynamic';
 

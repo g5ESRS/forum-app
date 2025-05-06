@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import AdminCategoryTable from "@/pages/admin/AdminCategoryTable";
+import AdminCategoryTable from "@/pagesProxy/admin/AdminCategoryTable";
 
 function Page() {
 

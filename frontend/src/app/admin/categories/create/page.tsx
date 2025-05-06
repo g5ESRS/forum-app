@@ -108,7 +108,7 @@ function Page() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-2 bg-green-600 text-white rounded"
+                            className="px-4 py-2 bg-primary-active text-white rounded"
                         >
                             {loading ? 'Creating...' : 'Create'}
                         </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import ForgotPasswordFormEmail from "@/pages/auth/ForgotPasswordFormEmail";
+import ForgotPasswordFormEmail from "@/pagesProxy/auth/ForgotPasswordFormEmail";
 
 function ForgotPassword() {
 

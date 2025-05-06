@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Group} from "@utils/types/user";
-import AdminGroup from "@/pages/admin/AdminGroup";
+import AdminGroup from "@/pagesProxy/admin/AdminGroup";
 
 interface IdPageProps {
     params: Promise<{ id: string }>;

@@ -102,7 +102,7 @@ export default function AdminGroup({ group }: AdminGroupProps) {
                         <div className="mt-6">
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded"
+                                className="px-4 py-2 bg-primary-active text-white rounded"
                             >
                                 Edit Group
                             </button>

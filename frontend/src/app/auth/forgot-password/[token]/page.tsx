@@ -1,5 +1,5 @@
 import React from 'react';
-import PasswordRecoveryForm from "@/pages/auth/PasswordRecoveryForm";
+import PasswordRecoveryForm from "@/pagesProxy/auth/PasswordRecoveryForm";
 
 async function Page({}:{
     params: Promise<{ token:string }>

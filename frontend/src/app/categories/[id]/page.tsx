@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryTopicsPage from "@/pages/CategoryTopicsPage";
+import CategoryTopicsPage from "@/pagesProxy/CategoryTopicsPage";
 import {BASE_URL} from "@utils/constants";
 
 interface CategeryTopicsPageProps {

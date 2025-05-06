@@ -1,5 +1,5 @@
 import React from 'react';
-import TopicsListPage from "@/pages/TopicsListPage";
+import TopicsListPage from "@/pagesProxy/TopicsListPage";
 
 function Page() {
     return (

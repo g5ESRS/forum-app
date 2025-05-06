@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import AdminUserTable from "@/pages/admin/AdminUserTable";
+import AdminUserTable from "@/pagesProxy/admin/AdminUserTable";
 
 function AdminUserList() {
     return (

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {Category} from "@utils/types/forum";
-import AdminCategory from "@/pages/admin/AdminCategory";
+import AdminCategory from "@/pagesProxy/admin/AdminCategory";
 
 interface UserIdPageProps {
     params: Promise<{id: string}>;
