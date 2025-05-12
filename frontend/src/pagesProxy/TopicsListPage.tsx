@@ -8,7 +8,7 @@ async function TopicsListPage() {
 
     try {
         const responseTopics = await fetch(`${BASE_URL}/api/forum/topics`, {
-            next: {revalidate: 10},
+            next: {revalidate: 1},
         });
 
         topics = await responseTopics.json();
