@@ -10,11 +10,11 @@ async function MainPage() {
 
     try {
         const responseCategory = await fetch(`${BASE_URL}/api/forum/categories`, {
-            next: { revalidate: 10 },
+            next: { revalidate: 1 },
         });
 
         const responseTopics = await fetch(`${BASE_URL}/api/forum/topics`, {
-            next: { revalidate: 10 },
+            next: { revalidate: 1 },
         });
 
         category = await responseCategory.json();

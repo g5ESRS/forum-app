@@ -8,7 +8,7 @@ async function CategoryListPage() {
 
     try {
         const responseCategories = await fetch(`${BASE_URL}/api/forum/categories`, {
-            next: { revalidate: 10 },
+            next: { revalidate: 1 },
         });
 
         categories = await responseCategories.json();

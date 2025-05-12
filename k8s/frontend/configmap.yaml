@@ -4,4 +4,4 @@ metadata:
   name: frontend-config
 data:
   NEXT_PUBLIC_BACKEND_URL: "http://django:8000"
-  NEXT_PUBLIC_SITE_URL: "http//localhost:3000"
+  NEXT_PUBLIC_SITE_URL: "http//localhost:30000"
