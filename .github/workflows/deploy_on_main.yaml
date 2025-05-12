@@ -1,0 +1,55 @@
+name: CI/CD to EKS
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: 108782086928.dkr.ecr.us-east-1.amazonaws.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::108782086928:role/GitHubOIDCDeployRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Backend Image
+        working-directory: backend
+        run: |
+          docker build -t $ECR_REGISTRY/forum-backend:latest .
+          docker push $ECR_REGISTRY/forum-backend:latest
+
+      - name: Build and Push Frontend Image
+        working-directory: frontend
+        run: |
+          docker build -t $ECR_REGISTRY/forum-frontend:latest .
+          docker push $ECR_REGISTRY/forum-frontend:latest
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: v1.3
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --name my-cluster --region $AWS_REGION
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -R -f k8s/
