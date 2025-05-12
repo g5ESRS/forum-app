@@ -51,6 +51,11 @@ jobs:
         run: |
           aws eks update-kubeconfig --name my-cluster --region $AWS_REGION
 
+      - name: Restart frontend and backend deployments
+        run: |
+          kubectl rollout restart deployment frontend
+          kubectl rollout restart deployment django
+
       - name: Apply Kubernetes manifests
         run: |
           kubectl apply -R -f k8s/
