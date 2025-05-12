@@ -33,13 +33,13 @@ jobs:
       - name: Build and Push Backend Image
         working-directory: backend
         run: |
-          docker build -t $ECR_REGISTRY/forum-backend:latest ./backend
+          docker build -t $ECR_REGISTRY/forum-backend:latest .
           docker push $ECR_REGISTRY/forum-backend:latest
 
       - name: Build and Push Frontend Image
         working-directory: frontend
         run: |
-          docker build -t $ECR_REGISTRY/forum-frontend:latest ./frontend
+          docker build -t $ECR_REGISTRY/forum-frontend:latest .
           docker push $ECR_REGISTRY/forum-frontend:latest
 
       - name: Setup kubectl
