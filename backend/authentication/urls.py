@@ -27,7 +27,7 @@ urlpatterns = [
     path('users/',UserListViewSet.as_view({ 'get': 'list'}),name='users-list'),
     path('users/<int:pk>/',UserViewSet.as_view({'get': 'retrieve','patch': 'partial_update'}),name='users-detail'),
 
-    #permissions 
+    #permissions
     path('permissions/', PermissionViewSet.as_view({'get': 'list'}), name="permissions-list"),
 
 ]
