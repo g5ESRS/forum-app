@@ -25,7 +25,8 @@ async function MainPage() {
                 <div> </div>
             )
         }
-    }catch {
+    }catch (e) {
+        console.error("Error fetching data:", e);
         category = [];
         topics = [];
     }
