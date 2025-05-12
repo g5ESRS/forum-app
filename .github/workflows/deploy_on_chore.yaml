@@ -2,7 +2,7 @@ name: CI/CD to EKS
 
 on:
   push:
-    branches: [main]
+    branches: [chore/deploy-5-deploying-on-eks]
 
 env:
   AWS_REGION: us-east-1
