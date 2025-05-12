@@ -14,8 +14,8 @@ spec:
     spec:
       initContainers:
         - name: init-migrate
-          image: django_app:latest
-          imagePullPolicy: Never
+          image: 108782086928.dkr.ecr.us-east-1.amazonaws.com/forum-backend:latest
+          imagePullPolicy: Always
           command: ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput"]
           envFrom:
             - configMapRef:
@@ -27,8 +27,8 @@ spec:
               mountPath: /app/media
       containers:
         - name: django
-          image: django_app:latest
-          imagePullPolicy: Never
+          image: 108782086928.dkr.ecr.us-east-1.amazonaws.com/forum-backend:latest
+          imagePullPolicy: Always
           command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
           ports:
             - containerPort: 8000

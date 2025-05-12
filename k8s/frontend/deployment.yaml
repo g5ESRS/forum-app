@@ -14,12 +14,10 @@ spec:
     spec:
       containers:
         - name: nextjs
-          image: nextjs_app:latest
-          imagePullPolicy: Never
-          env:
-            - name: NEXT_PUBLIC_BACKEND_URL
-              value: http://django:8000
-            - name: NEXT_PUBLIC_SITE_URL
-              value: http://localhost:3000
+          image: 108782086928.dkr.ecr.us-east-1.amazonaws.com/forum-frontend:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: frontend-config
           ports:
             - containerPort: 3000
