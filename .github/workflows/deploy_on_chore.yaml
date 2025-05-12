@@ -17,6 +17,12 @@ jobs:
       contents: read
 
     steps:
+      - name: Debug GitHub Context
+        run: |
+          echo "GITHUB_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "GITHUB_REF=$GITHUB_REF"
+          
+
       - name: Checkout source
         uses: actions/checkout@v3
 
@@ -25,6 +31,10 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::108782086928:role/GitHubOIDCDeployRole
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Who Am I?
+        run: aws sts get-caller-identity
+
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
