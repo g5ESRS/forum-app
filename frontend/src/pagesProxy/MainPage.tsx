@@ -9,11 +9,11 @@ async function MainPage() {
 
 
     try {
-        const responseCategory = await fetch(`${BASE_URL}/api/forum/categories`, {
+        const responseCategory = await fetch(`${BASE_URL}/api/forum/categories/`, {
             next: { revalidate: 1 },
         });
 
-        const responseTopics = await fetch(`${BASE_URL}/api/forum/topics`, {
+        const responseTopics = await fetch(`${BASE_URL}/api/forum/topics/`, {
             next: { revalidate: 1 },
         });
 
