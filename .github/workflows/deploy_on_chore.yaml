@@ -44,7 +44,7 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
         with:
-          version: v1.3
+          version: v1.28.1
 
       - name: Update kubeconfig for EKS
         run: |
