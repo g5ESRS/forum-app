@@ -17,8 +17,16 @@ async function MainPage() {
             next: { revalidate: 1 },
         });
 
+        if (!responseCategory.ok || !responseTopics.ok) {
+            console.error("Error fetching data:", responseCategory.status, responseTopics.status);
+        }
+
         category = await responseCategory.json();
         topics = await responseTopics.json();
+
+
+        console.log("category", category);
+        console.log("topics", topics);
 
         if (!(category && topics)) {
             return (
