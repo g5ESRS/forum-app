@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-config
+data:
+  DJANGO_ALLOWED_HOSTS: "ab3d500e8e86d4f049aa5155ec50eb69-1858241135.us-east-1.elb.amazonaws.com web localhost django"
+  DEBUG: 'True'
+  SECRET_KEY: 'your_secret_key_here'
+  POSTGRES_DB: 'postgres'
+  POSTGRES_USER: 'postgres'
+  POSTGRES_PASSWORD: 'postgres'
+  POSTGRES_HOST: 'postgres'
+  POSTGRES_PORT: '5432'

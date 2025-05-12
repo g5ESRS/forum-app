@@ -32,7 +32,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
 
 # Allowed hosts
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS",
-                          "localhost 127.0.0.1").split()
+                          "localhost web 127.0.0.1").split()
 
 
 # Application definition
@@ -45,20 +45,23 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'authentication',  # Authentication system
-
+    'forum',   #main forum functionalities
+    'communication', #notifications and private messaging
     # Third-party packages
     'rest_framework',  # Django REST Framework
     'rest_framework.authtoken',
-    'django_extensions',  # manage.py  
+    'rest_framework_simplejwt.token_blacklist',
+    'django_extensions',  # manage.py shell_plus, show_urls, runserver_plus, etc.
+    'django_filters',  # Django REST Framework filters
     # ---Django REST Auth----
     'django.contrib.sites',
-    
+
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    
+
 
     # ---Django REST Auth----
 
@@ -166,23 +169,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SITE_ID = 1
-#REST_USE_JWT = True
-#DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
-#TOKEN_MODEL = None
+# DJRESTAUTH_TOKEN_MODEL = None  # Disable the default Token model
+# TOKEN_MODEL = None
 
+# Update the configuration to use the correct format for dj-rest-auth 2.x
 REST_AUTH = {
     'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'jwt-auth',
+    'JWT_AUTH_HTTPONLY':False
 }
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
+    "BLACKLIST_AFTER_ROTATION": True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
 
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
@@ -190,26 +192,42 @@ AUTH_USER_MODEL = 'authentication.CustomUser'
 # Email backend for password reset & email verification
 # For development, you can just print emails to console:
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 
 # ACCOUNT_EMAIL_REQUIRED = True
 # AUTHENTICATION_METHOD = 'EMAIL'
 # ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
-#ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
-#Following is added to enable registration with email instead of username
+# Following is added to enable registration with email instead of username
 AUTHENTICATION_BACKENDS = (
- # `allauth` specific authentication methods, such as login by e-mail
- "allauth.account.auth_backends.AuthenticationBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # Remove or comment out SessionAuthentication if not needed:
-        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',# Remove or comment out SessionAuthentication if not needed:
+
+        
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 15,
+
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],#django_filters
+
 }
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }

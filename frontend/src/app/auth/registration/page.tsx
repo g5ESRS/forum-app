@@ -1,9 +1,9 @@
 import React from 'react';
-import RegisterForm from "@/pages/RegisterForm";
+import RegisterForm from "@/pagesProxy/auth/RegisterForm";
 
 function Registration() {
     return (
-        <div>
+        <div className={"w-full"}>
             <RegisterForm/>
         </div>
     );

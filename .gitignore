@@ -14,7 +14,7 @@ backend/__pycache__/
 *.sqlite3
 backend/.pytest_cache/
 
-# Virtual environment
+# Virtual environment directories
 backend/venv/
 #.env
 backend/.env.local
@@ -68,6 +68,8 @@ yarn-error.log*
 
 # Environment files
 backend/.env
+frontend/.env
+frontend/.env.docker
 
 # Vercel
 /frontend.vercel

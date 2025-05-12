@@ -1,4 +1,4 @@
-# myproject/settings_test.py
+# config/settings_test.py
 from config.settings import *  # Import everything from main settings
 
 # Override only the database settings for testing
@@ -9,7 +9,13 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    }
+}
+
 # Optionally override other test-specific settings
-DEBUG = False  # Disable debug mode for tests
+DEBUG = True  # Disable debug mode for tests
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]  # Faster password hashing
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"  # Prevent sending real emails

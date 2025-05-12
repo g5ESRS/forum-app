@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: nextjs
+          image: 108782086928.dkr.ecr.us-east-1.amazonaws.com/forum-frontend:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: frontend-config
+          ports:
+            - containerPort: 3000

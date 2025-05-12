@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+    spec:
+      initContainers:
+        - name: init-migrate
+          image: 108782086928.dkr.ecr.us-east-1.amazonaws.com/forum-backend:latest
+          imagePullPolicy: Always
+          command: ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput"]
+          envFrom:
+            - configMapRef:
+                name: django-config
+          volumeMounts:
+            - name: static-volume
+              mountPath: /app/static
+            - name: media-volume
+              mountPath: /app/media
+      containers:
+        - name: django
+          image: 108782086928.dkr.ecr.us-east-1.amazonaws.com/forum-backend:latest
+          imagePullPolicy: Always
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: django-config
+          volumeMounts:
+            - name: static-volume
+              mountPath: /app/static
+            - name: media-volume
+              mountPath: /app/media
+      volumes:
+        - name: static-volume
+          persistentVolumeClaim:
+            claimName: static-pvc
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: media-pvc

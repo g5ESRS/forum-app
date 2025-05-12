@@ -5,10 +5,12 @@ interface ContainerProps {
     className?: string;
 }
 
-function Container(props:ContainerProps) : React.JSX.Element {
+function Container(props:ContainerProps) : React.ReactNode {
     return (
-        <div className={`max-w-7xl px-4 sm:px-6 lg:px-8 bg-background text-foreground ${props.className}`}>
-            {props.children}
+        <div className={`w-full flex justify-center items-center min-h-screen bg-background`}>
+            <div className={`text-foreground ${props.className}`}>
+                {props.children}
+            </div>
         </div>
     );
 }
